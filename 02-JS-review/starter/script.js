@@ -145,7 +145,7 @@ function getBook(id) {
 
 // Desctructuring
 
-const book = getBook(1);
+const book = getBook(3);
 book;
 
 // const title = book.title;
@@ -174,3 +174,50 @@ const updatedBook = {
   pages: 1210, // this will overwrite the original property. But it only works if we write it AFTER thee spread operator. Otherwise the original property will be used because it will be the last
 }; // { a: a, b: b, moviePublicationDate: "2001-12-19" }
 updatedBook;
+
+// function getYear(str) {
+//   return str.split("-")[0];
+// }
+
+const getYear = (str) => str.split("-")[0];
+console.log(getYear(publicationDate));
+
+const summary = `${title}, a ${pages}-page long book was written by ${author} and published in ${getYear(
+  publicationDate
+)}. The book has${hasMovieAdaptation ? "" : " not"} been adapted as a movie`;
+summary;
+
+const pagesRange = pages > 1000 ? "over a thousand" : "less than 1000";
+pagesRange;
+console.log(`The book has ${pagesRange} pages`);
+
+console.log(true && "Some string"); // Some string
+console.log(false && "Some string"); // false
+console.log(hasMovieAdaptation && "This book has a movie"); // false or "This book has a movie"
+
+// falsy: 0, '', null, undefined
+console.log("jonas" && "Some string"); // Some string
+console.log(0 && "Some string"); // 0
+
+console.log(true || "Some string"); // true
+console.log(false || "Some string"); // Some string
+
+console.log(book.translations.spanish);
+
+const spanishTranslation = book.translations.spanish || "NOT TRANSLATED"; // useful for setting default value if another value does not exist
+spanishTranslation;
+
+// console.log(book.reviews.librarything.reviewsCount);
+// const countWrong = book.reviews.librarything.reviewsCount || "NO DATA";
+// countWrong; // NO DATA - which is wrong, because we do have data. It just equals to zero. But 0 is a falsy value so shortcircuiting interprets it that way
+
+// const count = book.reviews.librarything.reviewsCount ?? "NO DATA"; // nullish coalescing operator
+// count;
+
+function getTotalReviewCount(book) {
+  const goodreads = book.reviews?.goodreads?.reviewsCount ?? 0;
+  const librarything = book.reviews?.librarything?.reviewsCount ?? 0; // if it is undefined- the code breaks here. So we can use optional chaining
+  librarything;
+  return goodreads + librarything;
+}
+console.log(getTotalReviewCount(book));
