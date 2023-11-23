@@ -145,7 +145,7 @@ function getBook(id) {
 
 // Desctructuring
 
-const book = getBook(2);
+const book = getBook(1);
 book;
 
 // const title = book.title;
@@ -159,6 +159,18 @@ console.log(author, title, genres);
 // const primaryGenre = genres[0];
 // const secondaryGenre = genres[1];
 
-const [primaryGenre, secondaryGenre] = genres;
+const [primaryGenre, secondaryGenre, ...otherGenres] = genres; // Rest operator can only be in the end. So we can't write smth like this: [primaryGenre, ...otherGenres, lastGenre]
+console.log(primaryGenre, secondaryGenre, otherGenres);
 
-console.log(primaryGenre, secondaryGenre);
+// const newGenres = [genres, "epic fantasy"]; // [[a, b, c], "epic fatasy"]
+const newGenres = [...genres, "epic fantasy"]; // [a, b, c, "epic fatasy"] // Spread operator
+newGenres;
+
+// const updatedBook = { book, moviePublicationDate: "2001-12-19" }; // { {} , moviePublicationDate }
+const updatedBook = {
+  ...book,
+  // Adding a new property
+  moviePublicationDate: "2001-12-19",
+  pages: 1210, // this will overwrite the original property. But it only works if we write it AFTER thee spread operator. Otherwise the original property will be used because it will be the last
+}; // { a: a, b: b, moviePublicationDate: "2001-12-19" }
+updatedBook;
