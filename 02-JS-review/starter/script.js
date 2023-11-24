@@ -224,7 +224,7 @@ function getTotalReviewCount(book) {
 
 console.log(getTotalReviewCount(book));
 */
-
+/*
 function getTotalReviewCount(book) {
   const goodreads = book.reviews?.goodreads?.reviewsCount ?? 0;
   const librarything = book.reviews?.librarything?.reviewsCount ?? 0; // if it is undefined- the code breaks here. So we can use optional chaining
@@ -289,3 +289,27 @@ const booksAfterUpdate = booksAfterDelete.map((book) =>
   book.id === 1 ? { ...book, pages: 1210 } : book
 );
 booksAfterUpdate;
+*/
+/*
+console.log(fetch("https://jsonplaceholder.typicode.com/todos")); // Promise { <pending> }
+// .then is called as soon as the promise is fulfilled = as soon as it;s successfully got back with the data
+// fetch("https://jsonplaceholder.typicode.com/todos").then((response) => response.json()); // also takes some time and returns a promise
+fetch("https://jsonplaceholder.typicode.com/todos")
+  .then((response) => response.json())
+  .then((data) => console.log(data));
+
+console.log("jonas");
+*/
+
+async function getTodos() {
+  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
+  const data = await response.json();
+  console.log(data);
+
+  return data;
+}
+
+const todos = getTodos();
+console.log(todos); // Promise { <pending> }
+
+console.log("jonas");
