@@ -1,0 +1,43 @@
+-------- 5.4 --------
+React apps are entirely made out of components.
+A component has its own data, logic, and appearance (how it works and looks)
+
+-------- 5.5 --------
+Nesting components means calling (including) them from the other components. But we never nest function declarations inside each other. We always declare all our components in the top level
+
+-------- 5.6 --------
+JSX:
+Declarative syntax to describe what components look like and how they work
+In practice it means that each component must return one block of JSX.
+JSX is is an extension of JavaScript which allows us to combine parts of HTML, CSS and JavaScript all into one block of code.
+Each JSX element is converted to a React.createElement function call by Babel. So we could use React without JSX, but that just looks ugly and it's hard to read.
+
+JSX is declarative. It means that we basically describe what UI should look like, based on current data. In contrast, vanilla JS is imperative, and there we manually select DOM elements and traverse the DOM. And we mutate DOM step-by-step.
+React is an abstraction away from DOM: we never touch the DOM. Instead, we think of the UI as a reflection of the current data.
+Imperative: HOW to do things.
+Declarative: WHAT we want.
+
+-------- 5.9 --------
+Separation of Concerns
+Before the rise of SPAs (single-page applications) we basically had one technology per file. So that was the "Traditional" separation of concerns.
+But then JS became more in charge of HTML. Logic and UI are tightly coupled, so why keep them separated? => React components + JSX
+So content and logic are tightly coupled together and so it makes sense that they are co-located here. And co-located simply means that things that change together should be located as close as possible together. And in the case of React apps, that means that instead of one technology per file, we have one component per file.
+
+-------- 5.10 --------
+WRONG:
+<footer class="footer">
+
+RIGHT:
+<footer className="footer">
+
+-------- 5.12 --------
+Props are used to pass data from parent component s to child components (down the component tree).
+With props, parent components control how child components look and work.
+Anything can be passed as props: we can pass single values, arrays, objects, functions and even other React components.
+Component's data consists of props and state. State is basically internal component data that can be updated by the component's logic (by the component itself). And props is data coming from the outside, it can only be updated by the parent component.
+Props are immutable. They're read only.
+If you need to mutate props, you actually need state.
+That's because mutating props would affect parent, creating side effects.
+And React is all about pure functions without side-effects.
+In general in React a component should never mutate ane data that we write outside of its function scope.
+React uses one-way data flow. So data can flow from parents to children, but never the opposite way.
