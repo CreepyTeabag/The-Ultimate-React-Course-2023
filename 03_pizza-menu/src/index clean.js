@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom/client"; // Needed for React 18
+import ReactDOM from "react-dom/client";
 import "./index.css";
 
 const pizzaData = [
@@ -57,24 +57,16 @@ function App() {
   );
 }
 
-// Component declaration
 function Header() {
-  // const style = { color: "red", fontSize: "48px", textTransform: "uppercase" };
-  const style = {};
   return (
     <header className="header">
-      <h1 style={style}>Fast React Pizza Co.</h1>
+      <h1>Fast React Pizza Co.</h1>
     </header>
   );
 }
 
-// We could write these functions like that, too:
-// const Test = function () {};
-// const Test = () => {};
-
 function Menu() {
   const pizzas = pizzaData;
-  // const pizzas = [];
   const numPizzas = pizzas.length;
 
   return (
@@ -89,8 +81,7 @@ function Menu() {
           </p>
 
           <ul className="pizzas">
-            {pizzas.map((pizza) => (
-              //  <Pizza name={pizza.name} photoName={pizza.photoName} />
+            {pizzaData.map((pizza) => (
               <Pizza pizzaObj={pizza} key={pizza.name} />
             ))}
           </ul>
@@ -98,29 +89,11 @@ function Menu() {
       ) : (
         <p>We're still working on our menu. Please come back later :)</p>
       )}
-
-      {/* <Pizza
-        name="Pizza Spinaci"
-        ingredients="Tomato, mozarella, spinach, and ricotta cheese"
-        photoName="pizzas/spinaci.jpg"
-        price={10}
-      />
-
-      <Pizza
-        name="Pizza Funghi"
-        ingredients="Tomato, mushrooms"
-        price={12}
-        photoName="pizzas/funghi.jpg"
-      /> */}
     </main>
   );
 }
 
 function Pizza({ pizzaObj }) {
-  console.log(pizzaObj);
-
-  // if (pizzaObj.soldOut) return null; // doesn't render anything if pizza is sold out
-
   return (
     <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
       <img src={pizzaObj.photoName} alt={pizzaObj.name} />
@@ -139,13 +112,6 @@ function Footer() {
   const closeHour = 22;
   const isOpen = hour >= openHour && hour <= closeHour;
 
-  // if (hour >= openHour && hour <= closeHour) alert("We're currently open!");
-  // else alert("Sorry, we're closed!");
-
-  console.log(isOpen);
-
-  //   if (!isOpen) return <p>CLOSED</p>;
-
   return (
     <footer className="footer">
       {isOpen ? (
@@ -157,7 +123,6 @@ function Footer() {
       )}
     </footer>
   );
-  // return React.createElement("footer", null, "We're currently open!");
 }
 
 function Order({ closeHour, openHour }) {
@@ -172,14 +137,9 @@ function Order({ closeHour, openHour }) {
   );
 }
 
-// React v18
 const root = ReactDOM.createRoot(document.getElementById("root"));
-// root.render(<App />);
 root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
-); // This enables strict mode
-
-// React before 18
-// ReactDOM.render(<App />, document.getElementById("root"));
+);
