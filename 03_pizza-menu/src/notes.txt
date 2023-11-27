@@ -41,3 +41,21 @@ That's because mutating props would affect parent, creating side effects.
 And React is all about pure functions without side-effects.
 In general in React a component should never mutate ane data that we write outside of its function scope.
 React uses one-way data flow. So data can flow from parents to children, but never the opposite way.
+
+-------- 5.14 --------
+JSX works essentially just like HTML. However, we can enter a JavaScript mode by using curly braces anywhere in the markup where a value like text or an attribute is expected.
+We can place JS expressions inside {}. For example: reference variables, arrays, objects, [].map(), ternary operator.
+Statements are not allowed (if / else, for, switch).
+JSX produces a JS expression. 
+We can place other pieces of JSX inside {}.
+We can write JSX anywhere inside a component (in if / else, assign to variables, pass it into functions).
+JSX can only have one root element. If you need more, use <React.Fragment> 
+DIFFERENCES BETWEEN JSX AND SHTML
+- className instead of HTML's class
+- htmlFor instead of HTML's for
+- Every tag needs to be closed. Examples: <img /> or <br />
+- All event handlers and other properties need to be camelCased. Examples: onClick or onMouseOver
+- Exception: aria-* and data-* are written with dashes like in HTML
+- CSS inline styles are written like this: {{<style>}} (to reference a variable, and then an object)
+- CSS property names are also camelCased
+- Comments need to be in {} (because they are JS)
