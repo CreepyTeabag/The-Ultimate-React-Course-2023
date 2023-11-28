@@ -1,0 +1,25 @@
+-------- 6.3 --------
+onClick={() => alert("previous")}
+Here inside of {} should be a function, not a function call. Otherwise it'll be called immediately as the page loads.
+So, for example, it should be like this: onClick={handlePrevious} or this: onClick={() => alert("next")}
+Neither this: onClick={handlePrevious()} nor this: onClick={alert("next")}
+
+Event handler functions can be written inside of a function declaring the component, like this:
+export default function App() {
+  function handlePrevious() {}
+
+  return (...);
+}
+
+-------- 6.4 --------
+So state is basically data that a component can hold over time, and we use it for information that the component needs to remember throughout its lifecycle. Therefore, we can think of state as being the memory of a component.
+Some examples: notification count, text content of an input field or the active tab in a tabbed component. It can also be a bit more complex data, for example, the content of a shopping cart.
+"State variable" or a "piece of state" is a single variable in a component (component state).
+And "state" is like the entire condition of the component at a certain point in time.
+So, state === all pieces of state together.
+
+Updating component state triggers React to re-render the component, so to create a new Component View.
+Component View is basically just the component visually rendered on the screen.
+State allows developers to: 
+Update the component's view by rerendering the component.
+Persist local variables between multiple renders and rerenders.
