@@ -23,3 +23,15 @@ Component View is basically just the component visually rendered on the screen.
 State allows developers to: 
 Update the component's view by rerendering the component.
 Persist local variables between multiple renders and rerenders.
+
+-------- 6.5 --------
+const [step, setStep] = useState(1);
+useState returns an array with two things:
+[0] step - is a variable
+[1] setStep - function to update step
+1 - default value that is assigned to [0] step
+
+useState function is a hook. Hooks start with "use" keyword.
+We can only call hooks like use state on the top level of the function.
+
+We should really only update state using setter function. So not manually.
