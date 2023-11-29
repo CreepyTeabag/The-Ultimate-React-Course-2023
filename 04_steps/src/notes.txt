@@ -35,3 +35,9 @@ useState function is a hook. Hooks start with "use" keyword.
 We can only call hooks like use state on the top level of the function.
 
 We should really only update state using setter function. So not manually.
+
+-------- 6.7 --------
+A component is re-rendered when its state is updated.
+We change state -> React re-renders component -> View will be replace with a new one.
+So to update the view we need to update the state.
+React is called this way because it reacts to state changes by re-rendering the UI.
