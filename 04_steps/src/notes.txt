@@ -41,3 +41,14 @@ A component is re-rendered when its state is updated.
 We change state -> React re-renders component -> View will be replace with a new one.
 So to update the view we need to update the state.
 React is called this way because it reacts to state changes by re-rendering the UI.
+
+-------- 6.10 --------
+WRONG and won't work twice:
+setStep(step + 1);
+setStep(step + 1);
+
+RIGHT, works as expected:
+setStep((s) => s + 1);
+setStep((s) => s + 1);
+
+We need to do this when we update the state by using the current value of the state.
