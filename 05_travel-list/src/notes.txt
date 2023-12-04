@@ -1,0 +1,29 @@
+-------- 6.19 --------
+State is internal data. So data that is owned by the component in which it is declared. State can be thought of as the components memory because it can hold data over time. State can be updated by the component itself. This will then cause the component to be rerendered by react.
+
+
+Props is external data. So data that is owned by the parent component and you can think of props as function parameters, as a communication channel between parent and child components where parents can pass data into children. When the child component receives new updated props that will actually also cause the component to rerender.
+
+So in conclusion, whenever a piece of state is passed as a prop, when that state updates, both components are re-rendered.
+
+STATE                                   PROPS
+
+Internal data, owned by          External data, owned by
+component                        parent component
+
+Component "memory"               Similar to function                       
+                                 parameters
+
+Can be updated by the            Read-only
+component itself
+
+Updating state causes            Receiving new props causes
+component to re-render           component to re-render.
+                                 Usually when the parent's
+                                 state has been updated
+
+
+Used to make components          Used by parent to configure
+interactive                      child component ("settings")
+
+
