@@ -26,4 +26,20 @@ component to re-render           component to re-render.
 Used to make components          Used by parent to configure
 interactive                      child component ("settings")
 
+-------- 7.3 --------
+State management: Deciding when to create pieces of
+state, what types of state are necessary, where to place
+each piece of state, and how data flows through the app.
 
+LOCAL STATE
+
+- State needed only by one or few components
+- State that is defined in a component and only
+that component and child components have
+access to it (by passing via props)
+
+GLOBAL STATE
+
+- State that many components might need
+- Shared state that is accessible to every
+component in the entire application
