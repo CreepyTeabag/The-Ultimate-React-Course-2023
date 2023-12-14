@@ -210,3 +210,17 @@ component in the entire application
 
 -------- 7.5 --------
 We can call the technique of passing down a setter function "child to parent communication" or also "inverse data flow". Inverse, because usually data only flows down. But here we have a trick that allows us to basically have the data flowing up as well.
+
+-------- 8.6 --------
+The basic attachment of input:
+function Input() {
+  const [name, setName] = useState();
+  
+  return (
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+  );
+}
