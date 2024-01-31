@@ -253,3 +253,48 @@ You might need a new component if:
 ! It's completely normal that an app has components of many different sizes, including very small and huge ones
 
 The smaller components are - the more reusable they are.
+
+-------- 10.5 --------
+Most of the components in React fall into one of three categories:
+- Stateless / presentational components
+    These don't have any state. They get some props and then simply present the data & other content. The're usually small and reusable.
+- Stateful components
+    They have state. Can be reusable.
+- Structural components
+    "Pages", "layouts" or "screens" of the app. They're the result of composition. They can be huge and non-reusable (but they don't have to).
+
+-------- 10.7 --------
+>> Using a component:
+    function Modal() {
+      return (
+        <div className="modal">
+          <Success />
+        </div>
+      )
+    }
+
+    function Success() {
+      return <p>Well done !</p>;
+    }
+
+>> Component composition: 
+    function Modal({ children }) {
+      return (
+        <div className="modal">
+          {children}
+        </div>
+      )
+    }
+
+    function Success() {
+      return <p>Well done !< /p>;
+    }
+  It is used like this: 
+    <Modal>
+      <Success />
+    </Modal>
+
+So component composition is combining different components using the children prop (or explicitly defined props)
+With component composition, we can:
+1. Create highly reusable and flexible components
+2. Fix prop drilling (great for layouts)
