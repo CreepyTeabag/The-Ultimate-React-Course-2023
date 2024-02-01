@@ -298,3 +298,24 @@ So component composition is combining different components using the children pr
 With component composition, we can:
 1. Create highly reusable and flexible components
 2. Fix prop drilling (great for layouts)
+
+-------- 10.10 --------
+Implicitly passing in the component:
+  <Box>
+    <MovieList movies={movies} />
+  </Box>
+
+  function Box({ children }) { 
+    return <div>{ children }</div>
+  }
+
+OR
+
+Explicitly passing in the component:
+
+  <Box element={<MovieList movies={movies} />} />
+  function Box({ element }) {
+    return <div>{ element }</div>
+  }
+
+They both work the same, but with explicit passing you can give the element different names and place them in different places of your code.
