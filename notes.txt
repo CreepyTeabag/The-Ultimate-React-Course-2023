@@ -319,3 +319,19 @@ Explicitly passing in the component:
   }
 
 They both work the same, but with explicit passing you can give the element different names and place them in different places of your code.
+
+-------- 10.14 --------
+Every component is created by someone and consumed by someone.
+In a way, we can think of components' props as public API of the component
+
+Having too little props:
+ - Not flexible enough
+ - Might not be useful
+
+Having too many props:
+ - Too hard to use
+ - Exposing too much complexity
+ - Hard-to-write code
+ - If you have to do this, provide good default values
+
+We need to find the right balance between too little and too many props, that works for both the consumer and the creator.
