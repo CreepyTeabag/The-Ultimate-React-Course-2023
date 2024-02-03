@@ -335,3 +335,26 @@ Having too many props:
  - If you have to do this, provide good default values
 
 We need to find the right balance between too little and too many props, that works for both the consumer and the creator.
+
+-------- 11.03 --------
+Component:
+  - Description of a piece of UI
+  - A component is a function that returns React elements (element tree), usually written as JSX
+  - "Blueprint" or "Template"
+
+Component instance:
+  - Instances are created when we "use" components
+  - React internally calls the component as many times as needed
+  - Actual "physical" manifestation of a component
+  - Has its own state and props
+  - Has a lifecycle (can "be born", "live", and "die")
+  - Returns a React element
+
+React element:
+  - JSX is converted to React.createElement() function calls
+  - A React element is the result of these function calls
+  - Information necessary to create DOM elements
+  - Then it's inserted to DOM as a DOM Element (HTML)
+
+DOM Element (HTML)
+  - Actual visual representation of the component instance in the browser
