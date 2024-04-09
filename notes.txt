@@ -353,8 +353,40 @@ Component instance:
 React element:
   - JSX is converted to React.createElement() function calls
   - A React element is the result of these function calls
+  - Basically a big immutable JS object that React keeps in memory
   - Information necessary to create DOM elements
   - Then it's inserted to DOM as a DOM Element (HTML)
 
 DOM Element (HTML)
   - Actual visual representation of the component instance in the browser
+
+-------- 11.04 --------
+Symbols (JS primitive) cannot be transmitted via JSON. So React uses them in React elements in order to protect us from getting a fake React element from a malware API.
+In theory, we can call a component directly, like this:
+  SomeComponent()
+instead of this:
+  <SomeComponent />
+But then React won't see it as a component instance, but as a raw React element. The sate will go to the parent element, so basically it will not work as expected. So never do this.
+
+-------- 11.05 --------
+Component -> Component instance -> React Element -> DOM Element (HTML) -> User interface on the screen.
+
+1️⃣ Render is triggered (by updating state somewhere)
+ ⬇️
+2️⃣ Render Phase (React calls component functions and figures out how DOM should be updated)
+ ⬇️
+3️⃣ Commit Phase (React actually writes to the DOM, updating, inserting, and deleting elements)
+ ⬇️
+4️⃣ Browser paint
+
+In React, rendering is NOT updating the DOM or displaying elements on the screen. Rendering only happens internally inside React, it does not produce visual changes.
+What we traditionally call rendering happens in two phases in React: render + commit phase.
+
+1️⃣ Render is triggered
+  THE TWO SITUATIONS THAT TRIGGER RENDERS:
+  1. Initial render of the application
+  2. State is updated in one or more component instances (re-render)
+
+  - The render process is triggered for the entire application. But that doesn't meant that everything gets recreated in the DOM. It just means that the process of calling the component functions starts.
+  - In practice, it looks like React only re-renders the component where the state update happens, but that's not how it works behind the scenes
+  - Renders are not triggered immediately, but scheduled for when the JS engine has some "free time". There is also batching of multiple setState calls in event handlers

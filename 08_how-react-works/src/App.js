@@ -26,6 +26,9 @@ export default function App() {
   );
 }
 
+console.log(<DifferentContent test={23} />); // React instance
+console.log(DifferentContent()); // Raw React element
+
 function Tabbed({ content }) {
   const [activeTab, setActiveTab] = useState(0);
 
