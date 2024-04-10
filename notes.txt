@@ -390,3 +390,79 @@ What we traditionally call rendering happens in two phases in React: render + co
   - The render process is triggered for the entire application. But that doesn't meant that everything gets recreated in the DOM. It just means that the process of calling the component functions starts.
   - In practice, it looks like React only re-renders the component where the state update happens, but that's not how it works behind the scenes
   - Renders are not triggered immediately, but scheduled for when the JS engine has some "free time". There is also batching of multiple setState calls in event handlers
+
+-------- 11.06 --------
+2️⃣ Render Phase (done by React)
+  Component instances that triggered re-render
+      At the beginning of the render phase, React will go through the entire component tree, take all the component instances that triggered a re-render and actually render them, i.e call the corresponding component functions that we've written in our code.
+  ⬇️
+  React Elements
+      This creates updated React elements which all together make up the so-called "new virtual DOM". It contains the old elements, the updated element and the updated children of the updated element.
+  ⬇️
+  New Virtual DOM
+  ⬇️
+  Reconciliation + Diffing with the current so-called Fiber tree as it exists before the state update.
+  ⬇️
+  Updated Fiber tree
+  ⬇️
+  List of DOM updates
+  ⬇️
+  ...
+
+  The Virtual DOM:
+    It is a tree of all React elements created from all instances in the component tree. It's cheap and fast to create multiple trees. Basically it's just an object with information about what to create.
+    1) Initial render
+      Component tree -> React element tree
+    2) Re-renders
+      Rendering a component will cause all of its child components to be rendered as well (no matter if props changed or not). It is necessary because React doesn't know whether children will be affected.
+
+  React reconciler is called "Fiber".
+
+  What is reconciliation and why do we need it?
+  We need it because:
+  - Updating the entire DOM is inefficient and wasteful:
+    1. Writing to the DOM is (relatively) slow.
+    2. Usually only a small part of the DOM needs to be updated.
+  - React reuses as much of the existing DOM as possible
+    It uses Reconciliation: Deciding which DOM elements actually need to be inserted, deleted, or updated, in order to reflect the latest state changes.
+
+  Reconciliation is processed by a reconciler, and we can say that the reconciler really is the engine of React, the heart of React.
+
+  The reconciler: Fiber.
+    The Fiber takes the whole React element tree (virtual DOM) and based on it builds a fiber tree.
+    Fiber tree is an internal tree that has a "fiber" for each component instance and DOM element.
+    Fibers are NOT re-created on every render. Fiber tree is never destroyed. Instead, it's a mutable data structure. It is created during the initial render and then it mutates over and over again.
+    So fibers ("units of work") keep track of things like current component state, props, side effects, used hooks, etc. It also contains queue of work to do.
+    Fiber tree doesn't have the usual parent-children structure. It has a structure of a linked list, where each first child has a link to its parent and all the other children that have a link to their previous sibling.
+    Fiber tree contains both React components and DOM elements, so it is a complete representation of the entire DOM structure.
+    Work can be done asynchronously, so rendering process can be split into chinks, tasks can be prioritized, and work can be paused, reused, or thrown away. 
+      - It enables concurrent features like Suspense or transitions. 
+      - Long renders won't block JS engine.
+  Reconciliation in action.
+    Whenever reconciliation needs to happen, fiber walks through the entire tree step by step and analyzes what needs to change between the current fiber tree and the updated fiber tree based on the virtual DOM.
+    This process of comparing elements step by step based on their position in the tree is called Diffing.
+    Some elements will be updated, some will be deleted and some will stay the same. All these mutations will then be placed into a list called "the list of effects", which will be used in the next phase.
+
+-------- 11.07 --------
+3️⃣ Commit Phase (done by ReactDOM)
+  ...
+  ⬇️
+  List of DOM updates
+  ⬇️
+  Updated DOM
+  ⬇️
+  ...
+
+  - React writes to the DOM: insertions, deletions, and updates (list of DOM updates are "flushed" to the DOM). 
+  - Committing is synchronous: DOM is updated in one go, it can't be interrupted. This is necessary so that the DOM never shows partial results, ensuring a consistent UI (in sync with state at all times)
+  - After the commit phase completes, the workInProgress fiber tree becomes the current tree for the next render cycle.
+
+4️⃣ Browser paint (done by the browser)
+  ...
+  ⬇️
+  Updated UI on the screen
+
+React doesn't touch the DOM. React only renders. It doesn't know where the render result will go.
+React can be used on different platforms ("hosts"). For example, we can build native mobile applications for iOS and Android using React Native. Or we can build videos with React using a package called Remotion. Or we can create all sorts of things like Word or PDF documents, Figma designs, and many more using different so-called renderers. (Terrible name, because renderers don't render, they commit the result of render phase).
+That's why it's better to call virtual DOM a React Element tree.
+And that's why in index.js we import both React and ReactDom
