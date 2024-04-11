@@ -466,3 +466,35 @@ React doesn't touch the DOM. React only renders. It doesn't know where the rende
 React can be used on different platforms ("hosts"). For example, we can build native mobile applications for iOS and Android using React Native. Or we can build videos with React using a package called Remotion. Or we can create all sorts of things like Word or PDF documents, Figma designs, and many more using different so-called renderers. (Terrible name, because renderers don't render, they commit the result of render phase).
 That's why it's better to call virtual DOM a React Element tree.
 And that's why in index.js we import both React and ReactDom
+
+-------- 11.08 --------
+How diffing works:
+Diffing uses 2 fundamental assumptions (rules):
+  1. Two elements of different types will produce different trees.
+  2. Elements with a stable key prop stay the same across renders.
+Diffing is comparing elements step by step between rwo renders bsed on their position in the tree.
+
+Two situations:
+  1. Same position, DIFFERENT element (DOM element / React element)
+    - React assumes entire sub-tree is no longer valid
+    - Old components are destroyed and removed from DOM including state.
+    - Tree might be rebuilt if children stayed the same (state is reset)
+  2. Same position, SAME element
+    - Element will be kept (as well as child elements), including state.
+    - New props / attributes are passed if they changed between renders
+    - Sometimes this is not what we want. Then we can use the key prop.
+
+-------- 11.10 --------
+Key prop:
+- Special prop that we use to tell the diffing algorithm that an element is unique
+- Allows React to distinguish between multiple instances of the same component type
+- When a key stays the same across renders, the element will be kept in the DOM (even if the position in the tree changes)
+  1. Using keys in lists
+- When a key changes between renders, the element will be destroyed and a new one will be created (even if the position in the tree is the same as before)
+  2. Using keys to reset state
+
+1. Using keys in lists [stable key]
+  - If they don't have a key, the same elements if they are moved to a different position, will be removed and recreated in the DOM (bad for performance)
+  - If they do have keys, the keys will stay the same, so even if they're in a different position React will keep them in the DOM
+2. Key prop to reset state [changing key]
+  - We can pass in a different key to force React to recognize an element as a different one. This will reset the state. So when we need to reset state, we need to make sure that we give the element a key and that the key changes across renders.
