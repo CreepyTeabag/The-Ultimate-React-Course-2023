@@ -1,2 +1,4 @@
 node_modules/
 08_how-react-works/node_modules/
+.env
+.env.local

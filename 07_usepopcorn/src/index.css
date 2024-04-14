@@ -10,6 +10,20 @@
   --color-red-dark: #e03131;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background-color: var(--color-background-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-text-dark);
+  border-radius: 20px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -48,8 +62,7 @@ body {
   gap: 2.4rem;
   justify-content: center;
 }
-
-.box {
+.SearchResult .box {
   width: 42rem;
   max-width: 42rem;
   background-color: var(--color-background-500);
