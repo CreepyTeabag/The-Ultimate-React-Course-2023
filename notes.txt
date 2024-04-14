@@ -498,3 +498,55 @@ Key prop:
   - If they do have keys, the keys will stay the same, so even if they're in a different position React will keep them in the DOM
 2. Key prop to reset state [changing key]
   - We can pass in a different key to force React to recognize an element as a different one. This will reset the state. So when we need to reset state, we need to make sure that we give the element a key and that the key changes across renders.
+
+-------- 11.13 --------
+The two types of logic in React components.
+1. Render logic
+  - Code that lives at the top level of the component function
+  - Participates in describing how the component view looks like
+  - Executed every time the component renders.
+2. Event handler functions 
+  - Executed as a consequence of the event that the handler is listening for.
+  - Code that actually does things: update state, perform an HTTP request, read an input field, navigate to another page, etc.
+
+Functional programming principles:
+- Side effect: dependency on or modification of any data outside the function scope. "Interaction with the outside world". Examples: mutating external variables, HTTP requests, writing to DOM.
+    Side effects are not bad! A program can only be useful if it has some interaction with the outside world
+- Pure function: a function that has no side effects.
+    Does not change any variables outside its scope. Given the same input, a pure function always returns the same output
+
+Rules for render logic:
+- Components must be pure when it comes to render logic: given the same props(input), a component instance should always return the same JSX (output)
+- Render logic must produce no side effects: no interaction with the "outside world" is allowed. So, in render logic:
+  - Do NOT perform network requests (API calls)
+  - Do NOT start timers
+  - Do NOT directly use the DOM API
+  - Do NOT mutate objects of variables outside of the function scope (This is why we can't mutate props!)
+  - Do NOT update state (or refs): this will create an infinite loop!
+  - Side effects are allowed (and encouraged) in event handler functions! There is also a special hook to register side effects (useEffect)
+
+-------- 11.14 --------
+How state updates ar batched:
+There is batching of multiple setState calls in event handlers.
+If an event handler causes several state updates, they will get batched into just one state update for the entire event handler. So updating multiple pieces of state won't immediately cause a rerender for each update. Only after the state updates are batched then React will trigger one single render and commit. Therefore there are no wasted renders, which is better for performance.  But this can also have surprising results.
+Updating state is asynchronous.
+So within an event handler even if we change state, it is still "stale" until the component rerenders, so if we try to access it - we'll get the old state.
+- Updated state variables are not immediately available after setState call, but only after the re-render
+- This also applies when only one state variable is updated
+- If we need to update state based on previous update, we use setState with callback (setAnswer (answer=> ... ))
+
+We can opt out of automatic batching by wrapping a state update in ReactDOM.flushSync() (but you'll never need this)
+
+-------- 11.15 --------
+If we try to update the state, but it doesn't change (we set it to what it is) then React won't re-render the component.
+Whenever we update state based on the current state, we should always use a callback function.
+For example:
+    // Will only add 1, not 3
+    setLikes(likes + 1);
+    setLikes(likes + 1);
+    setLikes(likes + 1);
+
+    // Will add 3
+    setLikes((likes) => likes + 1);
+    setLikes((likes) => likes + 1);
+    setLikes((likes) => likes + 1);
