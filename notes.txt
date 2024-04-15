@@ -695,3 +695,53 @@ Effects have three parts:
 
 -------- 12.06 --------
 In React's strict mode in development the effects will be called twice, not once.
+
+-------- 12.09 --------
+What's the useEffect dependency array?
+- By default, effects run after every render. We can prevent that by passing a dependency array
+- Without the dependency array, React doesn't know when to run the effect
+- Each time one of the dependencies changes, the effect will be executed again
+- Every state variable and prop used inside the effect MUST be included in the dependency array (Otherwise, we get a "stale closure")
+
+The mechanics of effects:
+- useEffect is like an event listener that is listening for one dependency to change. Whenever a dependency changes, it will execute the effect again.
+- Effects react to updates to state and props used inside the effect (the dependencies). So effects are "reactive" (like state updates re-rendering the UI)
+
+useEffect is a synchronization mechanism.
+
+Synchronization and lifecycle:
+Dependency ( state or props changes)
+      ⬇️                         ⬇️
+  Effect is                 Component is
+executed again               re-rendered
+Effects and component lifecycle are deeply connected.
+
+We can use the dependency array to run effects when the component renders or re-renders.
+
+useEffect(fn, [x , y, z])
+  🔁 Effect synchronizes with x, y, and z
+  🐣 Runs on mount and re-renders triggered by updating x, y, or z
+
+useEffect(fn, [])
+  🔁 Effect synchronizes with NO state/props
+  🐣 Runs only on mount (initial render)
+
+useEffect(fn)
+  🔁 Effect synchronizes with everything
+  🐣 Runs on every render (usually bad!)
+
+When are effects executed?
+Mount (initial render)
+Commit
+Browser paint
+Effect ✨ (If an effect sets state, an additional render will be required)
+
+Title (or any dependency) changes
+Re-render
+Commit
+Layout effect (Another type of effect that is very rarely necessary (useLayoutEffect))
+Browser paint
+
+Effect ✨
+
+Unmount

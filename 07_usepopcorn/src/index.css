@@ -62,7 +62,8 @@ body {
   gap: 2.4rem;
   justify-content: center;
 }
-.SearchResult .box {
+
+.box {
   width: 42rem;
   max-width: 42rem;
   background-color: var(--color-background-500);
