@@ -745,3 +745,21 @@ Browser paint
 Effect ✨
 
 Unmount
+
+-------- 12.10 --------
+useEffect(function () {
+    console.log("After the initial render");
+  }, []);
+
+  useEffect(function () {
+    console.log("After every render");
+  });
+
+  console.log("During render");
+
+  useEffect(
+    function () {
+      console.log("After every state update");
+    },
+    [query]
+  );
