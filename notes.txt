@@ -741,10 +741,11 @@ Re-render
 Commit
 Layout effect (Another type of effect that is very rarely necessary (useLayoutEffect))
 Browser paint
-
+Cleanup🧹
 Effect ✨
 
 Unmount
+Cleanup🧹
 
 -------- 12.10 --------
 useEffect(function () {
@@ -763,3 +764,28 @@ useEffect(function () {
     },
     [query]
   );
+
+-------- 12.15 --------
+useEffect cleanup function:
+- Function that we can return from an effect (optional)
+- Runs on two different occasions:
+  1) Before the effect is executed again
+  2) After a component has unmounted
+- Necessary whenever the side effect keeps happening after the component has been re-rendered or unmounted.
+- Each effect should do only one thing! Use one useEffect hook for each side effect. This makes  effects easier to clean up/
+
+Component renders -> Execute effect if dependency array includes updated data.
+Component unmounts -> Execute cleanup function.
+
+Examples (effect -> potential cleanup):
+        HTTP request -> Cancel request
+    API subscription -> Cancel subscription
+         Start timer -> Stop timer
+  Add event listener -> Remove listener
+
+-------- 12.16 --------
+When the cleanup function runs after the component has been unmounted and destroyed, it still remembers all the necessary values because of closure. So it remembers all the values that existed when the function was created (and that was before the component was destroyed).
+
+-------- 12.17 --------
+Race condition happens when we make a lot of API calls and they end up "racing" each other, anf we don't know which one will arrive first.
+If we do HTTP requests, we always need to use cleanup functions to cancel previous request when we make a new one. This will help us avoid race condition and will improve network speed.
