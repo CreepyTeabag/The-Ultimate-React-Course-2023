@@ -807,3 +807,11 @@ Rules of hooks (they are automatically enforced by React's ESlint rules):
   - This is necessary to ensure that hooks are always called in the same order (hooks rely on this)
 2. Only call hooks from react functions
   - Only call hooks inside a function component or a custom hook.
+
+-------- 13.04 --------
+The initial state like this one
+  const [isTop, setIsTop] = useState(imdbRating > 8);
+only matter when the component initially renders and won't change during re-renders.
+
+We can change that by using the useEffect hook and call setIsTop(imdbRating > 8) each time imdbRating is changed. But that doesn't make much sense, because we can then simply use derived state like this:
+  const isTop = imdbRating > 8;
