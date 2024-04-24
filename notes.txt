@@ -877,3 +877,19 @@ Binding ref to a DOM element happens in three steps:
       />
     );
   }
+
+-------- 13.11 --------
+In React we can reuse UI with components. We can also reuse logic. If the logic doesn't have any hooks, we can use a regular function. But if it does contain hooks then we need to create a custom hook.
+
+Custom hooks:
+- Allow us to reuse non-visual logic in multiple components
+- One custom hook should have one purpose, to make it reusable and portable (even across multiple projects).
+- Rules of hooks apply to custom hooks too
+- Can receive and return any relevant data (usually [] or {})
+- Need to use one ore more hooks
+- Function name needs to start with use
+
+-------- 13.12 --------
+There are two strategies to decide if we want to create a new custom hook:
+  - We want to reuse some part of out non-visual logic.
+  - We want to extract a huge part of our component out into some custom hook.
