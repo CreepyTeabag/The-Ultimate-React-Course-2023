@@ -815,3 +815,65 @@ only matter when the component initially renders and won't change during re-rend
 
 We can change that by using the useEffect hook and call setIsTop(imdbRating > 8) each time imdbRating is changed. But that doesn't make much sense, because we can then simply use derived state like this:
   const isTop = imdbRating > 8;
+
+-------- 13.05 --------
+We should pass a function into the useState hook, and not call it.
+So we should do this:
+  const [watched, setWatched] = useState(function () {
+    const storedValue = localStorage.getItem("watched");
+    return JSON.parse(storedValue);
+  });
+not this:
+  const [watched, setWatched] = useState(localStorage.getItem("watched"));
+Because if we call the function, React will call it each time that the component is rendered, whereas if we pass the function in, React will only call once, when the component first mounts.
+
+-------- 13.06 --------
+Creating state:
+  - Simple
+    const [count, setCount] = useState(23);
+  - Based on function (lazy evaluation)
+    const [count, setCount] = useState(
+      () => localStorage.getItem("count")
+    );
+    ❗Functions must be pure and accept no arguments. Called only on initial render.
+Updating state:
+  - Simple
+    setCount(1000);
+  - Based on current state
+    setCount((c) => c + 1);
+    ❗Function must be pure ant return next state.
+    ❗Make sure to NOT mutate objects or arrays, but to replace them.
+
+-------- 13.08 --------
+What are refs?
+  const myRef = useRef(23);
+We can write to and read from the ref using .current:
+  myRef.current = 1000;
+
+- "Box" (object) with a mutable .current property that is persisted across renders ("normal" variables are always reset).
+- Two big use cases:
+  1) Creating a variable that stays the same between renders (e.g. previous state, setTimeout idm etc.)
+  2) Selecting and storing DOM elements
+- Refs are for data that id NOT rendered: usually only appear in event handlers or effects, not in JSX (otherwise use state)
+- Do NOT read or write ,current in render logic (like state)
+
+State VS Refs
+  - Updating Refs won't cause a re-render. So we use state when we want to store data that should rerender the component and Refs for data that should only be remembered by the component over time but never rerender it.
+  - Refs are mutable, state isn't.
+  Refs update synchronously and the new value can be used immediately after it was updated.
+
+-------- 13.09 --------
+Binding ref to a DOM element happens in three steps:
+  function Search({ query, setQuery }) {
+    const inputEl = useRef(null);   1️⃣ Create Ref hook
+
+    useEffect(function () {
+      inputEl.current.focus();    3️⃣ Do something with the DOM element in useEffect hook.
+    }, []);
+
+    return (
+      <input
+        ref={inputEl}   2️⃣ Bind Ref to an actual DOM element
+      />
+    );
+  }
