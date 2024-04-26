@@ -893,3 +893,33 @@ Custom hooks:
 There are two strategies to decide if we want to create a new custom hook:
   - We want to reuse some part of out non-visual logic.
   - We want to extract a huge part of our component out into some custom hook.
+
+-------- 16.03 --------
+Usually we use useReducer instead of useState when we have some complex state to manage.
+Usually as an action we pass into dispatch() an object like this:
+  {
+    type: "typeName", 
+    payload: someValue (optional)
+  }
+The huge advantage of using useReducer is that we have all the possible state updates that can happen in our application in one central place. It makes it really easy to understand the entire application.
+
+-------- 16.04 --------
+STATE MANAGEMENT WITH useState IS NOT ENOUGH IN CERTAIN SITUATIONS:
+1) When components have a lot of state variables and state updates, spread across many event handlers all over the component
+2) When multiple state updates need to happen at the same time (as a reaction to the same event, like "starting a game")
+3) When updating one piece of state depends on one or multiple other pieces of state
+In ALL THESE SITUATIONS, useReducer CAN BE OF GREAT HELP
+
+State with useReducer:
+- An alternative way of setting state, ideal for complex state and related pieces of state.
+- Stores related pieces of state in a state object.
+- useReducer needs reducer: function containing all logic to update state. Decouples state logic from component. (Like setState() with superpowers)
+- reducer: pure function (no side effects!) that takes current state and action, and returns the next state.
+- action: object that describes how to update state.
+- dispatch: function to trigger state updates, by "sending" actions from event handlers to the reducer (instead of setState).
+
+useReducer:
+  dispatch -> reducer -> next state -> re-render
+
+useState:
+  setState -> next (updated state) -> re-render
