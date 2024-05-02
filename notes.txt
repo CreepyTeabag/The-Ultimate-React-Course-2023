@@ -938,3 +938,72 @@ useReducer:
   - State is updated by dispatching an action to a reducer
   - Declarative state updates: complex state transitions are mapped to actions dispatch({ type: 'startGame' });
   - More difficult to understand and implement
+
+-------- 17.02 --------
+Setting up project with Vite:
+
+In terminal go to the folder where we'll create the project.
+  > npm create vite@latest
+  > project-name
+  > React
+  > JavaScript
+
+In VScode go to the project folder
+  > cd project-name 
+  > npm install
+
+
+In App.jsx delete everything and create new react functional component 
+
+Delete App.css and index.css files.
+
+Delete "import ... css" line from main.jsx
+
+Run
+  > npm run dev
+
+In a new terminal install eslint dependencies:
+> npm install eslint vite-plugin-eslint eslint-config-react-app --save-dev
+
+In project folder create file .eslintrc.json and write there:
+  {
+    "extends": "react-app"
+  }
+
+In vite.config.js add:
+  import eslint from "vite-plugin-eslint";
+and change
+  plugins: [react()],
+to
+  plugins: [react(), eslint()],
+
+Save. Project is ready!
+
+-------- 17.03 --------
+Routing (client-side routing):
+- With routing, we math different URLs to different UI views (React components): routes.
+- this enables users to navigate between different applications screens, using the browser URL.
+- Keeps the UI in sync with the current browser URL.
+- Allows us to build Single-page Applications.
+
+Single-page application:
+- Application that is executed entirely on the client (browsers)
+- Routes: different URLs correspond to different views (components)
+- JavaScript (React) is used to update the page (DOM)
+- The page is never reloaded
+- Feels like a native app
+- Additional data might be loaded from a web API.
+
+User clicks router link -> URL is changed -> DOM is updated: React component corresponding to the new URL is rendered.
+
+-------- 17.05 --------
+<Link to="/">Home</Link> 
+<NavLink to="/">Home</NavLink> will have class="active" on it if we go to /
+
+-------- 17.07 --------
+With CSS modules we can safely use class names and there wont' be any problems if other element in other components has a class with the same name. CSS modules will create a unique class name (like "_nav_afufn_1").
+If wanted to create a global class name that won't be changed - we can use 
+  :global(.test) {
+    background-color: red;
+  }
+and then the element will simply be className="test" -> class="test" 
