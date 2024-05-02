@@ -923,3 +923,18 @@ useReducer:
 
 useState:
   setState -> next (updated state) -> re-render
+
+-------- 16.16 --------
+useState:
+  - Ideal for single, independent pieces of state (numbers, strings, single arrays, etc.)
+  - Logic to update state is placed directly in event handlers or effects, spread all over one or multiple components.
+  - State is updated by calling setState (setter returned form useState)
+  - Imperative state updates 
+  - Easy to understand and to use
+
+useReducer:
+  - Ideal for multiple related pieces of state and complex state (e.g. object with many values and nested objects or arrays)
+  - Logic to update state lives in one central place, decoupled from components: the reducer
+  - State is updated by dispatching an action to a reducer
+  - Declarative state updates: complex state transitions are mapped to actions dispatch({ type: 'startGame' });
+  - More difficult to understand and implement
