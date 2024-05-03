@@ -1007,3 +1007,32 @@ If wanted to create a global class name that won't be changed - we can use
     background-color: red;
   }
 and then the element will simply be className="test" -> class="test" 
+
+-------- 17.10 --------
+To create nested routes, we simply place Route elements within each other, like this:
+  <Router path="parent" element={<ParentComponent/>}> // /parent
+    <Router path="child" element={<ChildComponent/>} /> // /parent/child
+  </Router>
+
+In ParentComponent we create a structure like this:
+  <ParentComponent>
+    <Outlet/>
+  </ParentComponent>
+or even like this:
+  <ParentComponent>
+    <OtherComponent>
+      <Outlet/>
+    </OtherComponent>
+  </ParentComponent>
+
+And it will create this structure of elements:
+  <ParentComponent>
+    <ChildComponent/>
+  </ParentComponent>
+  
+(or this:)
+  <ParentComponent>
+    <OtherComponent>
+      <ChildComponent/>
+    </OtherComponent>
+  </ParentComponent>
