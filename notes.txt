@@ -1036,3 +1036,33 @@ And it will create this structure of elements:
       <ChildComponent/>
     </OtherComponent>
   </ParentComponent>
+
+-------- 17.13 --------
+- The URL is an excellent place to store UI state and an alternative to useState in some situations. Examples: open/closed panels, currently selected list item, list sorting order, applied list filters.
+  1. Easy way to store state in a global place, accessible to all components in the app.
+  2. Good way to "pass" data from one page into the next page.
+  3. Makes it possible to bookmark and share the page with the exact UI state it had at the time.
+
+React Router tools: path, params, query string.
+
+-------- 17.14 --------
+To create a path with some info in the param and a route to it, we can do it like this:
+  App.jsx
+    <Route path="cities/:id" element={<City />} />
+
+  CityList.jsx
+    <Link to={`${id}`}>
+      Link text
+    </Link>
+
+The <Link> will make <City /> element appear and the URl will look like this: site.com/cites/12345
+
+:id is the name of the parameter. So we can access it using useParams().
+
+-------- 17.15 --------
+We can also add query string to the URL simply like this:
+  <Link to={`${id}?lat=${position.lat}&lng=${position.lng}`}>
+We can then access them like this:
+  const [searchParams, setSearchParams] = useSearchParams();
+  const lat = searchParams.get("lat");
+  const lng = searchParams.get("lng");
