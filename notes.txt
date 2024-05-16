@@ -1103,3 +1103,45 @@ We can do this:
   />
 
 "replace" will replace the current element in the history stack and we will be able to go back in the browser if we need to.
+
+-------- 18.01 --------
+Context API is a solution to prop drilling.
+Of course, sometimes we can do that with better component composition, but that isn't always possible.
+Context API:
+  - System to pass data throughout the app without manually passing props down the tree.
+  - Allows us to "broadcast" global state to the entire app.
+    1. Provider: gives all child components access to value.
+    2. value: data that we want to make available (usually state and functions)
+    3. Consumers: all components that read the provided context value (Consumers are the components that subscribe to the context)
+
+When the context value updates, all consumers will re-render.
+
+-------- 18.04 --------
+// 1. Create a new context
+  const PostContext = createContext();
+
+// 2. Provide value to the child components
+  const searchedPosts = "smth";
+  const handleAddPost = "smth2";
+
+  return
+  <PostContext.Provider
+    value={{
+      posts: searchedPosts,
+      onAddPost: handleAddPost,
+    }}
+  >
+    <div>
+      Our app here
+      <Header />
+    </div>
+  </PostContext.Provider>
+
+// 3. Consuming context value
+  function Header() {
+    const { onClearPosts } = useContext(PostContext);
+
+    return (
+      <header onClick={onClearPosts}>Clear posts</header>
+    );
+  }
