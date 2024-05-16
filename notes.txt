@@ -1066,3 +1066,40 @@ We can then access them like this:
   const [searchParams, setSearchParams] = useSearchParams();
   const lat = searchParams.get("lat");
   const lng = searchParams.get("lng");
+
+-------- 17.16 --------
+We can implement programmatic navigation like this (the imperative way):
+  const navigate = useNavigate();
+  <div onClick={() => {navigate("form");}}>anything here</div>
+This can be useful when we we want to navigate somewhere without clicking a link.
+To navigate back we can simply do it like this:
+  <Button 
+      onClick={(e) => {
+          e.preventDefault();
+          navigate(-1);
+        }}
+      >
+    Go back
+  </Button>
+Where -1 is the number of steps we want to go back.
+
+-------- 17.17 --------
+We can also implement programmatic navigation in a declarative way with <Navigate/> component.
+It is an old way, but it can be useful in nested routing. For example, instead of 
+  <Route
+    index
+    element={<CityList cities={cities} isLoading={isLoading} />}
+  />
+  <Route
+    path="cities"
+    element={<CityList cities={cities} isLoading={isLoading} />}
+  />
+
+We can do this:
+  <Route index element={<Navigate replace to="cities" />} /> // this will redirect to "cities" right away and we won't have duplicate pages /app and /app/cities
+  <Route
+    path="cities"
+    element={<CityList cities={cities} isLoading={isLoading} />}
+  />
+
+"replace" will replace the current element in the history stack and we will be able to go back in the browser if we need to.
