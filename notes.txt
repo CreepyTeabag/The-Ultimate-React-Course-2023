@@ -1145,3 +1145,50 @@ When the context value updates, all consumers will re-render.
       <header onClick={onClearPosts}>Clear posts</header>
     );
   }
+
+-------- 18.07 --------
+State management is like giving each piece of state the right home.
+Types of state:
+  1. State accessibility
+    - Local state
+      > Needed only by one or few components
+      > Only accessible in component and child components
+      > If the component was rendered twice, should a state update in on eof them reflect in the other one? NO
+    - Global state
+      > Might be needed by many components
+      > Accessible to every component in the application
+      > If the component was rendered twice, should a state update in on eof them reflect in the other one? YES
+  2. State domain
+    - Remote state
+      > All application data loaded from a remote server (API)
+      > Usually asynchronous
+      > Needs re-fetching + updating
+    - UI state
+      > Everything else!
+      > Theme, list filters, form data, etc.
+
+Where to place state?
+- Local component   (useState, useReducer, useRef)            Local state
+- Parent component  (useState, useReducer, useRef)            Lifting up state
+- Context           (Context API + useState, useReducer)      Global state (preferably UI state)
+- 3rd-party library (Redux, React Query, SWR, Zustand, etc.)  Global state (remote or UI)
+- URL               (React Router)                            Global state, passing between pages
+- Browser           (Local Storage, session storage, etc.)    Storing data in user's browser
+
+How to manage different types of state in practice? (see the slide)
+LOCAL STATE && UI STATE
+  - useState
+  - useReducer
+  - useRef
+LOCAL STATE && REMOTE STATE
+  - fetch + useEffect + useState / useReducer
+GLOBAL STATE && UI STATE
+  - Context API + useState / useReducer
+  - Redux, Zustand, Recoil, etc.
+  - React Router 
+GLOBAL STATE && REMOTE STATE
+  - Context API + useState / useReducer
+  - Redux, Zustand, Recoil, etc.
+  - React Query
+  - SWR
+  - RTK Query
