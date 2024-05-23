@@ -1192,3 +1192,9 @@ GLOBAL STATE && REMOTE STATE
   - React Query
   - SWR
   - RTK Query
+
+-------- 18.19 --------
+In a frontend application user authentication usually works in three steps: 
+1. Get the user's email and password from the login form and check with the API endpoint if everything's correctly
+2. If the credentials are correct, we redirect the user to the main application and save the user object in our state.
+3. Protect the application from the unauthorized users.
