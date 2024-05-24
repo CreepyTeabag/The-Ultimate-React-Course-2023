@@ -1198,3 +1198,104 @@ In a frontend application user authentication usually works in three steps:
 1. Get the user's email and password from the login form and check with the API endpoint if everything's correctly
 2. If the credentials are correct, we redirect the user to the main application and save the user object in our state.
 3. Protect the application from the unauthorized users.
+
+-------- 19.02 --------
+Performance optimization tools:
+1. Prevent wasted renders
+  - memo
+  - useMemo
+  - useCallback
+  - Passing elements as children or regular prop
+2. Improve app speed / responsiveness
+  - useMemo
+  - useCallback
+  - useTransition
+3. Reduce bundle size
+  - Using fewer 3d-party packages
+  - Code splitting and lazy loading
+
+When does a component instance re-render?
+  1. State changes
+  2. Context changes
+  3. Parent re-renders (creates the false impression that changing props re-renders a component. This is NOT true.)
+
+A render does NOT mean that the DOM actually gets updated, it just means the component function gets called. But this can be an expensive operation.
+
+Wasted render: a render that didn't produce any change in the DOM. It only becomes a problem when it happens too frequently or when the component is very slow.
+
+-------- 19.04 --------
+There's a way to avoid re-rendering a heavy component when we don't need it.
+For example, here: 
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <h1>Slow counter?!?</h1>
+      <button onClick={() => setCount((c) => c + 1)}>Increase: {count}</button>
+      <SlowComponent />
+    </div>
+  );
+
+The <SlowComponent /> will re-render each time the user clicks on the button, because the click will cause state update => the whole component will re-render => th child component will re-render too.
+
+But we can do this:
+  function Counter({ children }) {
+    const [count, setCount] = useState(0);
+    return (
+      <div>
+        <h1>Slow counter?!?</h1>
+        <button onClick={() => setCount((c) => c + 1)}>Increase: {count}</button>
+        {children}
+      </div>
+    );
+  }
+
+  export default function Test() {
+    return (
+      <div>
+        <Counter>
+          <SlowComponent />
+        </Counter>
+      </div>
+    );
+  }
+This way we pass in the <SlowComponent /> as {children} props. And <SlowComponent /> will be rendered at first, but it won't be affected by <Counter> re-renders. React will understand that nothing could have changed inside the <SlowComponent /> and it won't re-render it. It'll just stay the same and the whole component will work much faster.
+Basically the {children} are created before the receiving component was created and rendered.
+
+-------- 19.05 --------
+Memoization: Optimization technique that executes a pure function once, and saves the result in memory. If we try to execute the function again with the same arguments as before, the previously saved result will be returned, without executing the function again.
+We  can:
+  - Memoize components with memo
+  - Memoize objects with useMemo
+  - Memoize functions with useCallback
+Memoization will prevent wasted renders and improve app speed and responsiveness.
+
+- The memo function is used to create a memoized component that will not re-render when its parent re-renders, as long as the props stay the same between render.
+- It only affects props. A memoized component will still re-render when its own state changes or when a context that it's subscribed to changes.
+- Using the memo function only makes sense when the component is heavy (slow rendering), re-renders often, and does so with the same props.
+
+-------- 19.06 --------
+Memoizing a component is very easy: we just pass it as an argument into memo() function and store in a variable, like this:
+const Archive = memo(function Archive({ show }) {
+  const [showArchive, setShowArchive] = useState(show);
+
+  return (
+    <aside>
+      something
+    </aside>
+  );
+});
+
+-------- 19.07 --------
+An issue with memo:
+in React, everything is re-created on every render (including objects and functions). So the new object does not equal to the previous object. So if objects or functions are passed as props, the child component will always see them as new props on each re-render. If props are different between re-renders, memo will not work. To solve this, we can memoize objects and functions, to make them stable (preserve) between re-renders (memoized{} === memoized{})
+For that we can use two hooks: useMemo and useCallback.
+  - They are used to memoize values (useMemo) and functions (useCallback) between renders.
+  - Values passed into useMemo and useCallback will be stored in memory ("cached") and returned in subsequent re-renders, as long as dependencies ("inputs") stay the same.
+  - useMemo and useCallback have a dependency array (like useEffect): whenever one dependency changes, the value will be re-created.
+Three big use cases:
+  - Memoizing props to prevent wasted renders (together with memo)
+  - Memoizing values to avoid expensive re-calculations on every render.
+  - Memoizing values that are used in dependency array of another hook (for example, to avoid infinite useEffect loops).
+
+-------- 19.09 --------
+Setter functions always have a stable identity. So it's safe to pass them as props into memoized components without memoizing setter functions. They're kind of memized by default. So we don't even eed to include them in the dependency array of useMemo and useCallback.
