@@ -1299,3 +1299,30 @@ Three big use cases:
 
 -------- 19.09 --------
 Setter functions always have a stable identity. So it's safe to pass them as props into memoized components without memoizing setter functions. They're kind of memized by default. So we don't even eed to include them in the dependency array of useMemo and useCallback.
+
+-------- 19.10 --------
+We only need to optimize the context when:
+  1. The state in the context needs to change all the time 
+&&  2. The context has many consumers 
+&&  3. The app is low and laggy
+
+What we can do:
+ - pass components as {children}
+ - if there is a provider inside the app, we can memoize its values so that if app re-renders, the context still stays the same and doesn't rerender the consumers.
+ - split up the context into several contexts so that a change of one of the context values doesn't cause re-render of all the other consumers that don't really need this particular value.
+ - split the bundle
+
+-------- 19.12 --------
+The bundle and code splitting
+When a user initially tries to access a website, they get the bundle. Bundle is a JS file containing the entire application code. It is produced by a tool like Webpack or Vite. Downloading the bundle will load the entire app at once, turning it into a SPA.
+Bundle size: Amount of JS users have to download to start using the app. One of the most important things to be optimized, so that the bundle takes less time to download.
+Code splitting: Splitting bundle into multiple parts that can be downloaded over time ("lazy loading").
+
+We can do that this way:
+  const Homepage = lazy(() => import("./pages/Homepage")); // lazy loading components when we need them
+
+  <Suspense fallback={<SpinnerFullPage />}>
+    <Routes>
+      <Route index element={<Homepage />} />
+    </Routes>
+  </Suspense>
