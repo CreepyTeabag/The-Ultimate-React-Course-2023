@@ -1326,3 +1326,47 @@ We can do that this way:
       <Route index element={<Homepage />} />
     </Routes>
   </Suspense>
+
+-------- 19.13 --------
+- Don't optimize prematurely!
+- Don't optimize anything if there is nothing to optimize ...
+- Don't wrap all components in memo ()
+- Don't wrap all values in useMemo ()
+- Don't wrap all functions in useCallback()
+- Don't optimize context if it's not slow and doesn't have many consumers
+
+- Find performance bottlenecks using the Profiler and visual inspection (laggy UI)
+- Fix those real performance issues
+- Memoize expensive re-renders
+- Memoize expensive calculations
+- Optimize context if it has many consumers and changes often
+- Memoize context value + child components
+- Implement code splitting + lazy loading for SPA routes
+
+-------- 19.14 --------
+UseEffect dependency array rules
+
+- Every state variable, prop, and context value used inside the effect MUST be included in the dependency array
+- All "reactive values" must be included! That means any function or variable that reference any other reactive value (state, prop, or context value)
+- Dependencies choose themselves: NEVER ignore the exhaustive-deps ESlint rule!
+- Do NOT use objects or arrays as dependencies (objects are recreated on each render, and React sees new objects as different, {} !== {})
+
+How to remove unnecessary dependencies:
+- Remove function dependencies
+  - Move function into the effect
+  - If you need the function in multiple places, memoize it (useCallback)
+  - If the function doesn't reference any reactive values, move it out of the component
+- Remove object dependencies
+  - Instead of including the entire object, include only the properties you need (primitive values)
+  - If that doesn't work, use the same strategies as for functions (moving or memoizing object)
+- Other strategies
+  - If you have multiple related reactive values as dependencies, try using a reducer (useReducer)
+  - You don't need to include setState (from useState) and dispatch (from useReducer) in the dependencies, as React guarantees them to be stable across renders.
+
+When NOT to use an effect
+- Effects should be used as a last resort, when no other solution makes sense. React calls them an "escape hatch" to step outside of React
+
+Three cases where effects are overused:
+1. Responding to a user event. An event handler function should be used instead.
+2. Fetching data on component mount. This is fine in small apps, but in real-world app, a library like React Query should be used.
+3. Synchronizing state changes with one another (setting state based on another state variable). Try to use derived state and event handlers
