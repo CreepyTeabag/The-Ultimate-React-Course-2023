@@ -1370,3 +1370,45 @@ Three cases where effects are overused:
 1. Responding to a user event. An event handler function should be used instead.
 2. Fetching data on component mount. This is fine in small apps, but in real-world app, a library like React Query should be used.
 3. Synchronizing state changes with one another (setting state based on another state variable). Try to use derived state and event handlers
+
+-------- 19.18 --------
+In JS closure is the fact that a function captures all the variables from its lexical scope (from the place it was defined) at the time that the function was created.
+useEffects are built on closures. So basically when an effect uses some state, but doesn't have anything in the dependency array, it will use the initial (stale) state = value from the closure even when something changes. 
+If we don't add all of the dependencies, but do add some, then on each effect run the values from dependency array will update, but values not listed in the dependency array will be stale.
+
+-------- 20.02 --------
+Redux:
+- 3rd-party library to manage global state
+- Standalone library, but easy to integrate with React apps using react-redux library
+- All global state is stored in one globally accessible store, which is easy to update using "actions" (like useReducer)
+- It's conceptually similar to using the Context API + useReducer
+- Two "version": (1) Classic Redux, (2) Modern Redux Toolkit
+
+Global store is updated => All consuming components re-render
+
+Historically, Redux was used in most React apps for all global state. Today, that has changed, because there are many alternatives. Many apps don't need Redux anymore, unless they need a lot of global UI state.
+
+Redux can still be useful if there is lots of global local (not remote) state that updates frequently.
+
+The mechanism of the useReducer hook:
+action {type: 'deposit', payload: 50}
+
+Event handler in component -> dispatch -> reducer -> next state -> re-render
+
+The mechanism of the Redux:
+Event handler in component -> Action creator function -> dispatch -> store (several reducers + current state) -> next state -> re-render
+
+Store is where all global state lives (a centralized container). It's the single source of truth of global state in the app.
+Each reducer inside the store is a pure function that calculates the next state (state transition) based on the action and the current state. Usually one reducer per app feature (e.g. shopping cart + user data + theme).
+We have several reducers because we should create one reducer per application feature / per data domain.
+Action creator function is used to automate writing action. Helpful to keep all possible actions in one central place (This is a convention, not a must)
+
+The goal of Redux is to make the state update logic separate from the rest of the application.
+
+-------- 20.03 --------
+In the past, in Redux action types were usually written like this: "SET_BALANCE", "DEPOSIT_ACCOUNT".
+Now it is advised to write them in this form: "stateDomain/eventName", i.e. "account/deposit", "account/requestLoan".
+For the default case it is advised not to throw error, but to simply return state.
+
+-------- 20.04 --------
+Installing Redux: npm i redux
