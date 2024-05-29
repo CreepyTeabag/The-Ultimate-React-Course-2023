@@ -1412,3 +1412,57 @@ For the default case it is advised not to throw error, but to simply return stat
 
 -------- 20.04 --------
 Installing Redux: npm i redux
+Installing Redux: npm i react-redux
+
+-------- 20.06 --------
+If we create several reducers, we need to pass them into the store like this:
+  const rootReducer = combineReducers({
+    account: accountReducer,
+    customer: customerReducer,
+  });
+
+  const store = createStore(rootReducer);
+
+To access store state we do this:
+  store.getState()
+
+-------- 20.07 --------
+Usually we split our Redux reducers into different files and different folder. Each file for a specific purpose is called "slice"
+The file structure is like this:
+-src
+--features
+---accounts
+-----accountSlice
+-----accountComponent
+---customers
+-----customerSlice
+-----customerComponent
+
+In a slice file we place reducer, action creators and initial state.
+In store. js we import adn combine all the reducers and export the store.
+
+-------- 20.08 --------
+To connect Redux and React, we install this package:
+  npm i react-redux
+Then we import our store into index.js
+  import { Provider } from "react-redux";
+  import store from "./store";
+And wrap our App into the provider:
+  <Provider store={store}>
+    <App />
+  </Provider>
+
+So basically it works a lot like context.
+
+To access store from a component, we do this:
+  const customer = useSelector((store) => store.customer);
+This will return object with customer's state
+
+-------- 20.09 --------
+To dispatch actions from a component we import the dispatch function using useDispatch:
+  import { useDispatch } from "react-redux";
+  const dispatch = useDispatch();
+
+And we use one of the action creators:
+  import { createCustomer } from "./customerSlice";
+  dispatch(createCustomer(fullName, nationalId));
