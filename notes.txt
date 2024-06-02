@@ -1382,7 +1382,7 @@ Redux:
 - Standalone library, but easy to integrate with React apps using react-redux library
 - All global state is stored in one globally accessible store, which is easy to update using "actions" (like useReducer)
 - It's conceptually similar to using the Context API + useReducer
-- Two "version": (1) Classic Redux, (2) Modern Redux Toolkit
+- Two "versions": (1) Classic Redux, (2) Modern Redux Toolkit
 
 Global store is updated => All consuming components re-render
 
@@ -1427,7 +1427,7 @@ To access store state we do this:
   store.getState()
 
 -------- 20.07 --------
-Usually we split our Redux reducers into different files and different folder. Each file for a specific purpose is called "slice"
+Usually we split our Redux reducers into different files and different folders. Each file for a specific purpose is called "slice"
 The file structure is like this:
 -src
 --features
@@ -1439,7 +1439,7 @@ The file structure is like this:
 -----customerComponent
 
 In a slice file we place reducer, action creators and initial state.
-In store. js we import adn combine all the reducers and export the store.
+In store.js we import and combine all the reducers and export the store.
 
 -------- 20.08 --------
 To connect Redux and React, we install this package:
@@ -1466,3 +1466,41 @@ To dispatch actions from a component we import the dispatch function using useDi
 And we use one of the action creators:
   import { createCustomer } from "./customerSlice";
   dispatch(createCustomer(fullName, nationalId));
+
+-------- 20.11 --------
+Where to make an asynchronous API call (or any other async operation) in Redux?
+Component -> dispatch -> middleware -> store
+Not the component, because it can make asynchronous operations and then dispatch, but fetching data in components is not ideal.
+Not the store, because it cannot do asynchronous operations. Reducers need to be pure functions.
+
+Middleware is a function that sits between dispatching the action and the store. Allows us to run code after dispatching, but before reaching the reducer in the store. It is perfect for asynchronous code. Can do API calls, timers, logging, etc. This is the place for side effects.
+
+-------- 20.12 --------
+To use middleware (Thunks in out case), we need to:
+1. Install the middleware package
+  npm install redux-thunk
+2. Apply the middleware to our store
+  in store.js:
+    import { thunk } from "redux-thunk";
+    const store = createStore(rootReducer, applyMiddleware(thunk));
+3. Use the middleware in our action creator functions.
+  Simply return a function from action creator that dispatches the object.
+
+If action creator function return a function instead of an object, the React will know that it this function is the thunk. It will then execute the function and not immediately dispatch an action to the store.
+
+-------- 20.13 --------
+Installing Redux DevTools:
+1. Install Google Chrome Extension.
+2. Install the package
+  npm i redux-devtools-extension
+
+-------- 20.14 --------
+Redux Toolkit:
+- The modern and preferred way of writing Redux code
+- An opinionated approach, forcing us to use Redux best practices.
+- 100% compatible with "classic" Redux, allowing us to use them together.
+- Allows us to write a lot less code to achieve the same result (less "boilerplate")
+- Gives us 3 big things (but there are many more...):
+  1. We can write code that "mutates" state inside reducers (will be converted to immutable logic behind the scenes by "Immer" library)
+  2. Action creators are automatically created.
+  3. Automatically setup of Thunk middleware and DevTools.
