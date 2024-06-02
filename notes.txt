@@ -1504,3 +1504,23 @@ Redux Toolkit:
   1. We can write code that "mutates" state inside reducers (will be converted to immutable logic behind the scenes by "Immer" library)
   2. Action creators are automatically created.
   3. Automatically setup of Thunk middleware and DevTools.
+
+-------- 20.15 --------
+Installing Redux Toolkit:
+  npm i @reduxjs/toolkit
+
+Redux Toolkit will automatically:
+  - combine the reducers
+  - add the Thunk middleware
+  - setup DevTools
+
+-------- 20.19 --------
+When to use Context API + useReducer:
+  - for global state management in SMALL apps
+  - when you just need to share a value that doesn't change often (color scheme, preferred language, authenticated user, etc.)
+  - when you need to solve a simple prop drilling problem
+  - when you need to manage state in a local sub-tree of the app (for example in the compound component pattern)
+When to use Redux:
+  - for global state management in LARGE apps
+  - when you have lots of global UI state that needs to be updtes frequently (because Redux is optimized for this) (shopping cart, current tabs, complex filters or search, etc.)
+  - When you have complex state with nested objects and arrays (because you can mutate state with Redux Toolkit)
