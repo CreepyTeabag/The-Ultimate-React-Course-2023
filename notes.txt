@@ -1515,7 +1515,7 @@ Redux Toolkit will automatically:
   - setup DevTools
 
 -------- 20.18 --------
-If one of dispatch functions needs two arguments within the payload, we need to prepare them by sort of extracting them from the payload beforehand.
+If one of dispatch functions needs two arguments within the action.payload, we need to prepare them by sort of extracting them from the action.payload beforehand.
 
 Like this:
 
@@ -1523,12 +1523,12 @@ const accountSlice = createSlice({
   name: "account",
   initialState: initialState,
   reducers: {
-    // needs only one argument, the payload
+    // needs only one argument, the action.payload
     withdraw(state, action) {
       state.balance -= action.payload;
     },
 
-    // needs several arguments with payload
+    // needs several arguments within action.payload
     requestLoan: {
       prepare(amount, purpose) {
         return {
