@@ -1514,6 +1514,39 @@ Redux Toolkit will automatically:
   - add the Thunk middleware
   - setup DevTools
 
+-------- 20.18 --------
+If one of dispatch functions needs two arguments within the payload, we need to prepare them by sort of extracting them from the payload beforehand.
+
+Like this:
+
+const accountSlice = createSlice({
+  name: "account",
+  initialState: initialState,
+  reducers: {
+    // needs only one argument, the payload
+    withdraw(state, action) {
+      state.balance -= action.payload;
+    },
+
+    // needs several arguments with payload
+    requestLoan: {
+      prepare(amount, purpose) {
+        return {
+          payload: { amount, purpose },
+        };
+      },
+
+      reducer(state, action) {
+        if (state.loan > 0) return;
+
+        state.loan = action.payload.amount;
+        state.loanPurpose = action.payload.purpose;
+        state.balance += action.payload.amount;
+      },
+    },
+  },
+});
+
 -------- 20.19 --------
 When to use Context API + useReducer:
   - for global state management in SMALL apps
