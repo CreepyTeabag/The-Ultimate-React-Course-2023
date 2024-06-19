@@ -1567,3 +1567,52 @@ When to use Redux:
 3. Divide the application into feature categories
   - Think about state management + data flow
 4. Decide on what libraries to use (technology decisions)
+  
+-------- 21.06 --------
+In the new React Router we can declare the route in an imperative way, like this:
+const router = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/menu",
+        element: <Menu />,
+      },
+    ],
+  },
+]);
+
+In this case the topmost element does not need a path, because it will be a layout route, a parent route of all other routes.
+
+-------- 21.07 --------
+Somewhere in our code we create a function that fetches some data from an API. We then provide that loader function to one of our routes and that route will then fetch that data as soon as the application goes to that route. And then it will provide the info to the component.
+
+So we fetch the data using React Router in three steps:
+  1. Create a loader
+  2. Provide the loader
+  3. Provide the data to the page
+
+We create a loader like this (usually in the same file as the component that's going to need it)
+  export async function loader() {
+    const menu = await getMenu(); // some async function with fetch request
+    return menu;
+  }
+
+And in App.jsx we provide the loader to the page like this:
+  {
+    path: "/menu",
+    element: <Menu />,
+    loader: menuLoader,
+  }, 
+
+And then we provide data to the component like this:
+  function Menu() {
+    const menu = useLoaderData();
+    console.log(menu);
+    
+    return <h1>Menu</h1>;
+  }
