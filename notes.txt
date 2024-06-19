@@ -1557,3 +1557,13 @@ When to use Redux:
   - for global state management in LARGE apps
   - when you have lots of global UI state that needs to be updtes frequently (because Redux is optimized for this) (shopping cart, current tabs, complex filters or search, etc.)
   - When you have complex state with nested objects and arrays (because you can mutate state with Redux Toolkit)
+  
+-------- 21.03 --------
+1. Gather application requirements and features
+2. Divide the application into pages
+  - Think about the overall and page-level UI
+  - Break the desired UI into components
+  - Design and build a static version (no state yet)
+3. Divide the application into feature categories
+  - Think about state management + data flow
+4. Decide on what libraries to use (technology decisions)
