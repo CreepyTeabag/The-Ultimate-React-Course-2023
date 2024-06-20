@@ -1558,7 +1558,7 @@ When to use Redux:
   - when you have lots of global UI state that needs to be updtes frequently (because Redux is optimized for this) (shopping cart, current tabs, complex filters or search, etc.)
   - When you have complex state with nested objects and arrays (because you can mutate state with Redux Toolkit)
   
--------- 21.03 --------
+-------- 22.03 --------
 1. Gather application requirements and features
 2. Divide the application into pages
   - Think about the overall and page-level UI
@@ -1568,7 +1568,7 @@ When to use Redux:
   - Think about state management + data flow
 4. Decide on what libraries to use (technology decisions)
   
--------- 21.06 --------
+-------- 22.06 --------
 In the new React Router we can declare the route in an imperative way, like this:
 const router = createBrowserRouter([
   {
@@ -1588,7 +1588,7 @@ const router = createBrowserRouter([
 
 In this case the topmost element does not need a path, because it will be a layout route, a parent route of all other routes.
 
--------- 21.07 --------
+-------- 22.07 --------
 Somewhere in our code we create a function that fetches some data from an API. We then provide that loader function to one of our routes and that route will then fetch that data as soon as the application goes to that route. And then it will provide the info to the component.
 
 So we fetch the data using React Router in three steps:
@@ -1616,3 +1616,23 @@ And then we provide data to the component like this:
     
     return <h1>Menu</h1>;
   }
+
+-------- 22.09 --------
+To catch any errors in any of the pages, we can specify the element to be shown when an error occurs. We can do this both on the layout element and on any of the routes:
+
+const router = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    errorElement: <Error />,
+    children: [
+      {
+        path: "/menu",
+        element: <Menu />,
+        loader: menuLoader,
+        errorElement: <Error />,
+      },
+    ]
+  }
+])
+And in that Error component we can access the info about the error like this:
+const error = useRouteError();
