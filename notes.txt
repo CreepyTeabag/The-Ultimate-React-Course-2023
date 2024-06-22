@@ -1146,6 +1146,42 @@ When the context value updates, all consumers will re-render.
     );
   }
 
+The full version:
+// ThingContext.jsx
+  const { createContext, useContext } = require("react");
+
+  const ThingContext = createContext();
+
+  function ThingProvider({ children }) {
+    const test = "test text";
+    return (
+      <ThingContext.Provider value={{ test: test }}>
+        {children}
+      </ThingContext.Provider>
+    );
+  }
+
+  function useThing() {
+    const context = useContext(ThingContext);
+    if (context === undefined)
+      throw new Error("ThingContext was used outside of ThingProvider");
+    return context;
+  }
+
+  export { ThingProvider, useThing };
+
+// index.js
+  import { SkillsProvider } from "./context/SkillsContext";
+  ...
+  <SkillsProvider>
+    <App />
+  </SkillsProvider>
+
+// Any component
+  import { useSkills } from "../context/SkillsContext";
+  const { test } = useSkills();
+
+
 -------- 18.07 --------
 State management is like giving each piece of state the right home.
 Types of state:
