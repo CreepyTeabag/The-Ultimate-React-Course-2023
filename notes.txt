@@ -1672,3 +1672,47 @@ const router = createBrowserRouter([
 ])
 And in that Error component we can access the info about the error like this:
 const error = useRouteError();
+
+-------- 22.10 --------
+When we create a loader within the component, we get access to parameters in the URL. 
+So if declared our route like this:
+  {
+    path: "/order/:orderId",
+    element: <Order />,
+  },
+Then we'll get access to the orderId like this:
+  export async function loader({ params }) {
+    const orderId = params.orderId;
+  }
+
+-------- 22.11 --------
+We can get the data from the form when we submit it like this:
+  // App.jsx
+    import CreateOrder, {
+      action as createOrderAction,
+    } from "./features/order/CreateOrder";
+    {
+      path: "/order/new",
+      element: <CreateOrder />,
+      action: createOrderAction,
+    },
+  // CreateOrder.jsx
+    export async function action({ request }) {
+      const formData = await request.formData();
+      const data = Object.fromEntries(formData);
+      console.log(data);
+
+      return null;
+    }
+
+-------- 23.02 --------
+Utility-first CSS approach (atomic CSS): writing tiny classes with one single purpose, and then combining them to build entire layouts.
+
+-------- 23.03 --------
+Setting up Tailwind CSS:
+Follow instructions on Tailwind website.
+Install Tailwind CSS VScode extension.
+Install Tailwind CSS Prettier plugin (npm install -D prettier prettier-plugin-tailwindcss)
+
+-------- 23.07 --------
+In tailwind the breakpoints are fixed, but it's better to customize them to fit the needs of the particular application.
