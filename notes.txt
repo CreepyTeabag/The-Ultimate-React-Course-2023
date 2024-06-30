@@ -1782,3 +1782,17 @@ If we really need to use our store outside of any component, we can do so like t
     store.dispatch(clearCart());
   }
 But it should be avoided if possible, because it causes problems with performance.
+
+-------- 24.13 --------
+We can access info from another page using fetcher like this: 
+  const fetcher = useFetcher();
+
+  useEffect(
+    function () {
+      if (!fetcher.data && fetcher.state === "idle") fetcher.load("/menu");
+    },
+    [fetcher],
+  );
+  
+-------- 24.14 --------
+We can use fetcher.Form to send data to the backend and then update th page contents according to the new changes.
