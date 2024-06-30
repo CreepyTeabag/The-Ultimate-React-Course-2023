@@ -1716,3 +1716,69 @@ Install Tailwind CSS Prettier plugin (npm install -D prettier prettier-plugin-ta
 
 -------- 23.07 --------
 In tailwind the breakpoints are fixed, but it's better to customize them to fit the needs of the particular application.
+
+-------- 23.12 --------
+We can reuse tailwind classes like this: 
+index.css
+  @layer components {
+    .input {
+      @apply w-full rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:outline-none focus:ring focus:ring-yellow-400 md:px-6 md:py-3;
+    }
+  }
+And using .input just like a regular class. But this should be an exception. So usually we should just reuse the React component and leave Tailwind classes as they are.
+We can add Tailwind classes to these reusable classes like this:
+      <input
+        className="input mb-8 w-72"
+      />
+
+-------- 23.14 --------
+We can also reuse Tailwind variables in our own classes like this:
+  .loader {
+    background: no-repeat linear-gradient(theme(colors.stone.800) 0 0) 0% 50%,
+  }
+
+-------- 23.15 --------
+We can override any TailWind configuration. We can do it in tailwind.config.file by adding something like this:
+    theme: {
+      fontFamily: {
+        pizza: "Roboto Mono, monospace",
+      },
+    }
+
+Which will override the default fontFamily. We can check what the default is on Tailwind GitHub https://github.com/tailwindlabs/tailwindcss/blob/master/stubs/config.full.js
+We can then use it with "font-pizza" class. Or we can just override sans fontFamily and our default font everywhere will be "Roboto Mono, monospace"
+
+We can also add our own custom values by adding them into "extend":
+  extend: {
+    colors: {
+      pizza: "#123456",
+    },
+    fontSize: {
+      huge: ["80rem", { lineHeight: "1" }],
+    },
+  },
+And then we can use them like regular Tailwind classes: text-huge or bg-pizza
+
+-------- 23.16 --------
+Helpful TailWind classes:
+space creates spaces between child elements without using flex or grid
+divide: line between child elements
+
+-------- 24.03 --------
+If we have an input which value we want to use in redux, we should connect the two directly. We should store input value in the state and only put the value into redux store after submitting the form.
+
+-------- 24.06 --------
+If we need to calculate something from the state, the best practice is to create a function for that in the slice, import it when need and use it inside useSelector like this:
+  cartSlice.js
+    export const getTotalCartQuantity = (state) =>
+      state.cart.cart.reduce((sum, item) => sum + item.quantity, 0);
+  someComponent.jsx
+      const totalCartQuantity = useSelector(getTotalCartQuantity);
+
+-------- 24.10 --------
+If we really need to use our store outside of any component, we can do so like this:
+  import store from "../../store";
+  function someFunction () {
+    store.dispatch(clearCart());
+  }
+But it should be avoided if possible, because it causes problems with performance.

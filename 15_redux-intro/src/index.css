@@ -1,6 +1,6 @@
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   margin: 40px;
 }
 
@@ -32,6 +32,7 @@ button {
   top: 40px;
   right: 40px;
   background-color: #f7f7f7;
+  color: #150d3d;
   padding: 24px 32px;
   font-weight: bold;
   font-size: 32px;
