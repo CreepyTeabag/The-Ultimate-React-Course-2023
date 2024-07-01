@@ -1796,3 +1796,34 @@ We can access info from another page using fetcher like this:
   
 -------- 24.14 --------
 We can use fetcher.Form to send data to the backend and then update th page contents according to the new changes.
+
+-------- 25.02 --------
+Client-side rendering (CSR) or server-side rendering (SSR)? 
+CSR with plain React VS SSR with framework (Next.js or Remix)
+
+CSR with plain React
+- Used to build Single-Page Applications (SPAs)
+- All HTML is rendered on the client 
+- All JavaScript needs to be downloaded before apps start running: bad for performance
+- One perfect use case: apps that are used "internally" as tools inside companies, that are entirely hidden behind a login
+
+SSR with framework (Next.js or Remix)
+- Used to build Multi-Page Applications (MPAs)
+- Some HTML is rendered in the server
+- More performant, as less JavaScript needs to be downloaded
+- The React team is moving more and more in this direction
+
+-------- 25.04 --------
+Using styled components:
+  npm i styled-components
+
+  import styled from "styled-components";
+
+  const H1 = styled.h1` // First letter should be uppercase because it's a React component 
+    font-size: 30px;
+    font-weight: 600;
+  `;
+
+  <H1>The Wild Oasis</H1>
+
+If we want to style the <App> itself, we replace its inner <div> with <StyledApp> and give the styles that we need with const StyledApp = styled.div``;
