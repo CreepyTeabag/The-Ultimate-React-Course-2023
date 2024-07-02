@@ -1856,3 +1856,18 @@ const Heading = styled.h1`
 
 We can create a different HTML tag by passing an "as" prop into the component, like this:
   <Heading as="h3">Form</Heading> // will render <h3></h3>
+  
+-------- 25.07 --------
+We can define default props in styled components like this:
+  Row.defaultProps = {
+    type: "vertical",
+  };
+
+We can also create multiple variation / options for our components. See 17_the-wild-oasis/src/ui/Button.jsx for an example
+  
+-------- 25.10 --------
+We can also style predefined components by passing them into styled function like this:
+  const StyledNavLink = styled(NavLink)`
+    /* some styles */
+  `;
+For icons in React we can use react-icons, which allow us to import certain icons as components and easily style them.
