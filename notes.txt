@@ -1827,3 +1827,32 @@ Using styled components:
   <H1>The Wild Oasis</H1>
 
 If we want to style the <App> itself, we replace its inner <div> with <StyledApp> and give the styles that we need with const StyledApp = styled.div``;
+
+-------- 25.05 --------
+We can add global styles by creating a GlobalStyles component in a separate .js file and importing and using it as a sibling component to App contents, like this:
+function App() {
+  return (
+    <>
+      <GlobalStyles />
+      <StyledApp>
+        // our app here
+      </StyledApp>
+    </>
+  );
+}
+
+-------- 25.06 --------
+Styles in styled components are actually template literals, so we can conditionally set them with ${}. We can also use variables in them. Like this:
+const test = css`
+  text-align: center;
+`;
+
+const Heading = styled.h1`
+  font-size: ${true ? '20px' : '10px'};
+  font-weight: 600;
+  background-color: yellow;
+  ${test}
+`;
+
+We can create a different HTML tag by passing an "as" prop into the component, like this:
+  <Heading as="h3">Form</Heading> // will render <h3></h3>
