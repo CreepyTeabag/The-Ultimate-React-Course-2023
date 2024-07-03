@@ -1871,3 +1871,13 @@ We can also style predefined components by passing them into styled function lik
     /* some styles */
   `;
 For icons in React we can use react-icons, which allow us to import certain icons as components and easily style them.
+
+-------- 26.02 --------
+- Service that allows developers to easily create a back-end with a Postgres database
+- Automatically creates a database and API so we can easily request and receive data from the server
+- No back-end development needed
+- Perfect to get up and running quickly!
+- Not just an API: Supabase also comes with easy-to-use user authentication and file storage
+
+-------- 26.06 --------
+When we create a database, we need to take into account the number of entities that are involved. We need to make sure that we place a foreign key in a table that can only reference exactly one other row from another table.

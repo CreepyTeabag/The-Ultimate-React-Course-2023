@@ -51,3 +51,11 @@ Technology decisions:
 - UI State management: Context API
 - Form management: React Hook Form
 - Other tools: React icons / React hot toast / Recharts / date-fns / Supabse
+
+Modeling global remote state:
+State Domains / feature categories
+Bookings:      Bookings / Dashboard / Check in and out
+Cabins:        Cabins
+Guests:        Guests
+Settings:      App settings
+Users:         Authentication
