@@ -1881,3 +1881,85 @@ For icons in React we can use react-icons, which allow us to import certain icon
 
 -------- 26.06 --------
 When we create a database, we need to take into account the number of entities that are involved. We need to make sure that we place a foreign key in a table that can only reference exactly one other row from another table.
+
+-------- 27.02 --------
+What is React Query?
+- Powerful library for managing remote (server) state
+- Many features that allow us to write a lot less code, while also making the UX a lot better:
+  - Data is stored in a cache
+  - Automatic loading and error states
+  - Automatic re-fetching to keep state synched
+  - Pre-fetching
+  - Easy remote state mutation (updating)
+  - Offline support
+- Needed because remote state is fundamentally different from regular (UI) state
+Installing:
+ npm i @tanstack/react-query
+ npm i @tanstack/react-query-devtools
+
+ 
+-------- 27.05 --------
+Using React Query in a project:
+App.jsx
+  import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+  import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        // staleTime: 60 * 1000, // in milliseconds
+        staleTime: 0, 
+      },
+    },
+  });
+
+  <QueryClientProvider client={queryClient}>
+    <ReactQueryDevtools initialIsOpen={false} />
+    // the app here
+  </QueryClientProvider>
+
+Getting the remote state:
+  const {
+    isLoading,
+    data: cabins,
+    error,
+  } = useQuery({
+    queryKey: ["cabin"],
+    queryFn: getCabins, // some async function that accesses the server or DB
+  });
+
+Mutating the remote state:
+
+  const queryClient = useQueryClient();
+
+  const { isLoading: isDeleting, mutate } = useMutation({
+    mutationFn: deleteCabin,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ // this will mark the old data invalid and force refetching of the new data
+        queryKey: ["cabins"], // the data to be invalidated and refetched
+      });
+    },
+    onError: (err) => alert(err.message),
+  });
+
+    return (
+      <button onClick={() => mutate(cabinId)}>Delete</button>
+    );
+
+-------- 27.06 --------
+A handy library for notifications:
+  npm i react-hot-toast
+
+-------- 27.07 --------
+A useful library for handling forms:
+  npm i react-hook-form
+Using it:
+  import { useForm } from "react-hook-form";
+  const { register, handleSubmit, reset, getValues } = useForm();
+  function onSubmit(data) {
+    console.log(data);
+  }
+
+  <Form onSubmit={handleSubmit(onSubmit)}>
+    <Input type="text" id="name" {...register("name")} />
+  </Form>
