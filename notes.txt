@@ -1963,3 +1963,21 @@ Using it:
   <Form onSubmit={handleSubmit(onSubmit)}>
     <Input type="text" id="name" {...register("name")} />
   </Form>
+
+-------- 28.01 --------
+How to reuse code in React?
+UI: 
+  - components and props
+  - children prop
+Stateful logic: 
+- custom hooks
+UI + stateful logic: 
+  - render props pattern (for complete control over what the component renders, by passing in a function that tells the component what to render)
+  - compound component pattern (for very self-contained components that need / want to manage their own state. Compound components are like fancy super components)
+
+-------- 28.04 --------
+The render prop pattern is all about passing in a prop 'render' that is a function that component uses to know what it should render and how to do it.
+We can use when we can't simply pass the children prop because we need to specify exactly how the render that component.
+
+-------- 28.05 --------
+Higher order components
