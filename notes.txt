@@ -2050,3 +2050,13 @@ And then we get a super flexible component that we can use whichever way we want
       <Counter.Decrease icon="⬇️" />
     </Counter>
   </div>
+
+-------- 28.07 --------
+React Portal allows us to render an element outside of the parent component's DOM structure while still keeping the element in the original position of the component tree.
+Creating a portal is as simple as this:
+function Modal({ onClose, children }) {
+  return createPortal(
+    <div>Any JSX here</div>,
+    document.body // DOM node inside of which the element will be rendered
+  );
+}
