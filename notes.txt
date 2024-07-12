@@ -1981,3 +1981,72 @@ We can use when we can't simply pass the children prop because we need to specif
 
 -------- 28.05 --------
 Higher order components
+
+-------- 28.06 --------
+Compound Component Pattern
+Parent component + child elements that only make sense when used with the parent.
+Creating the compound component pattern:
+import { useState, createContext, useContext } from "react";
+
+// 1. Create a context
+const CounterContext = createContext();
+
+// 2. Create a parent component
+function Counter({ children }) {
+  const [count, setCount] = useState(0);
+  const increase = () => setCount((c) => c + 1);
+  const decrease = () => setCount((c) => c - 1);
+
+  return (
+    <CounterContext.Provider value={{ count, increase, decrease }}>
+      <span>{children}</span>
+    </CounterContext.Provider>
+  );
+}
+
+// 3. Create child components to help implementing the common task
+function Count() {
+  const { count } = useContext(CounterContext);
+  return <span>{count}</span>;
+}
+
+function Label({ children }) {
+  return <span>{children}</span>;
+}
+
+function Increase({ icon }) {
+  const { increase } = useContext(CounterContext);
+  return <button onClick={increase}>{icon}</button>;
+}
+
+function Decrease({ icon }) {
+  const { decrease } = useContext(CounterContext);
+  return <button onClick={decrease}>{icon}</button>;
+}
+
+// 4. Add child components as properties to the parent component
+Counter.Count = Count;
+Counter.Label = Label;
+Counter.Increase = Increase;
+Counter.Decrease = Decrease;
+export default Counter;
+
+And then we get a super flexible component that we can use whichever way we want:
+  <Counter>
+    <Counter.Label>My super flexible counter</Counter.Label>
+    <Counter.Decrease icon="-" />
+    <Counter.Increase icon="+" />
+    <Counter.Count />
+  </Counter>
+
+  <div>
+    <Counter>
+      <Counter.Label>My super flexible counter</Counter.Label>
+      <br />
+      <Counter.Increase icon="⬆️" />
+      <div>
+        <Counter.Count />
+      </div>
+      <Counter.Decrease icon="⬇️" />
+    </Counter>
+  </div>
