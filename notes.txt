@@ -2060,3 +2060,15 @@ function Modal({ onClose, children }) {
     document.body // DOM node inside of which the element will be rendered
   );
 }
+
+-------- 29.03 --------
+We can only take the props that we need and put the rest of them into props that we can then pass down further like this:
+  <Select options={options} type="white" test="test" />
+
+  function Select({ options, value, ...props }) {
+    return (
+      <StyledSelect value={value} {...props}>
+        anything here
+      </StyledSelect>
+    );
+  }
