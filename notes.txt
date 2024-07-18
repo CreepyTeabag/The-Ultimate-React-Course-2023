@@ -2072,3 +2072,40 @@ We can only take the props that we need and put the rest of them into props that
       </StyledSelect>
     );
   }
+
+-------- 29.06 --------
+We can pass in different parameters for filtering into supabase like this:
+  .from("bookings")
+  .select(
+    "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)"
+  )
+  .eq("status", "unconfirmed") // equal to
+  .gte("totalPrice", 2000) // greater or equal to
+  .lte("totalPrice", 5000) // less or equal to
+
+In React Query we can react changes in different things. For example, here
+  // Filter
+  const filterValue = searchParams.get("status");
+  const filter =
+    !filterValue || filterValue === "all"
+      ? null
+      : { field: "status", value: filterValue };
+
+  const {
+    isLoading,
+    data: bookings,
+    error,
+  } = useQuery({
+    queryKey: ["bookings", filter], // * here
+    queryFn: () => getBookings({ filter, sortBy }),
+  });
+
+* here: this array works like a dependency array in useEffect. So if filter changes, React Query will refetch the data.
+
+-------- 29.07 --------
+We can sort the data from supabase with .order method like this:
+supabase
+    .from("bookings")
+    .order("name", {
+      ascending: true
+    });
