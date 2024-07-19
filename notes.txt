@@ -2109,3 +2109,7 @@ supabase
     .order("name", {
       ascending: true
     });
+
+-------- 29.09 --------
+We can take only a part of the data from supabase using this:
+  query = query.range(from, to);
