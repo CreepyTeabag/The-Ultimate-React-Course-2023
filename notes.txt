@@ -2113,3 +2113,12 @@ supabase
 -------- 29.09 --------
 We can take only a part of the data from supabase using this:
   query = query.range(from, to);
+
+-------- 29.12 --------
+mutationFn return some data. And this data is accessible in 
+  onSuccess:(data) => {
+    console.log(data);
+  }
+
+-------- 29.13 --------
+mutationFn can only receive one argument. If we need to pass in more than that, we pass in an object.
