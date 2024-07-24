@@ -2122,3 +2122,6 @@ mutationFn return some data. And this data is accessible in
 
 -------- 29.13 --------
 mutationFn can only receive one argument. If we need to pass in more than that, we pass in an object.
+
+-------- 29.21 --------
+We can send a confirmation letter from supabase to the newly registered user. We can also specify the site url in URL Configuration so that the user gets redirected there after confirmation.
