@@ -2125,3 +2125,6 @@ mutationFn can only receive one argument. If we need to pass in more than that, 
 
 -------- 29.21 --------
 We can send a confirmation letter from supabase to the newly registered user. We can also specify the site url in URL Configuration so that the user gets redirected there after confirmation.
+
+-------- 29.32 --------
+For all the bugs that can happen during rendering, we can use react-error-boundary package. This package will allow us to show a meaningful message to the user instead of blank screen. And provide the user with a function that can reset the site (or go back, for example).

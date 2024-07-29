@@ -50,7 +50,7 @@ Technology decisions:
 - Remote state management: React Query
 - UI State management: Context API
 - Form management: React Hook Form
-- Other tools: React icons / React hot toast / Recharts / date-fns / Supabse
+- Other tools: React icons / React hot toast / Recharts / date-fns / Supabase
 
 Modeling global remote state:
 State Domains / feature categories
@@ -59,3 +59,11 @@ Cabins:        Cabins
 Guests:        Guests
 Settings:      App settings
 Users:         Authentication
+
+
+Ideas for additional features:
+- creating new bookings right from the application
+- editing a booking
+- add check in and check out times
+- allow users to add different cabin prices for different days 
+- add a restaurant: a page where user register a bill value each time the guest goes to the restaurant and then at checkout that bill need to be paid. And then we don't just checkout people, but lead to a page where we can print a PDF with an invoice that we can email to the guest.
