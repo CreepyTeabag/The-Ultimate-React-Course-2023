@@ -2128,3 +2128,35 @@ We can send a confirmation letter from supabase to the newly registered user. We
 
 -------- 29.32 --------
 For all the bugs that can happen during rendering, we can use react-error-boundary package. This package will allow us to show a meaningful message to the user instead of blank screen. And provide the user with a function that can reset the site (or go back, for example).
+
+-------- 32.415--------
+Client-side rendering (CSR)
+= HTML is rendered on the client (the user's computer) using JavaScript
+- Slower initial page loads:
+  - Bigger JavaScript bundle needs to be downloaded before app starts running
+  - Data is fetched after components mount
++ Highly interactive: All the code and content
+has already been loaded (except data)
+- SEO can be problematic
++ SPAs: Perfect for building highly interactive web apps
+= Apps that don't need SEO:
+  = Apps that are used "internally" as tools inside companies
+  = Apps that are entirely hidden behind a login
+
+Server-side rendering (SSR)
+= HTML is rendered on the server (the developer's computer)
++ Faster initial page loads:
+  + Less JavaScript needs to be downloaded and executed
+  + Data is fetched before HTML is rendered
+- Less interactive: Pages might be downloaded on demand and require full page reloads
++ SEO-friendly: Content is easier for search engines to index
++ Content-driven websites or apps where SEO is essential: E-commerce, blogs, news, marketing websites, etc.
+
+Two types of SSR:
+1. Static: HTML generated at build time (often called Static Site Generation, or SSG). (Static files exist on the server and do not change)
+2. Dynamic: HTML generated each time server receives new request (some call only this SSR)
+
+Largest content paint (LCP) - the point at which the website shows all the relevant content to the user.
+First content paint (FCP) - the moment at which at least something has been painted onto the screen.
+
+In SSR it's the server who initiates the data fetching, before the page or app is even rendered. The rendering itself happens on the server, too.
