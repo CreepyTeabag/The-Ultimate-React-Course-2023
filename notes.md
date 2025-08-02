@@ -2304,4 +2304,66 @@ In SSR it's the server who initiates the data fetching, before the page or app i
 With hydration React builds the component tree on the client and compares it with the actual SSRd DOM: They must be the same so React can adopt it. React does not recreate the DOM tree - it just continues and finishes the process of server-side rendering.
 If the DOM tree is not what Next.js thinks it should be - then a hydration error happens. Common hydration error causes: incorrect HTML element nesting, different data used for rendering, using browser-APIs, side effects, etc.
 
-### 006
+### 007 What is Next.js
+
+Next.js:
+
+- Meta-framework built on top of React.
+- Opinionated way of building React apps: set of conventions and best practices regarding routing, data fetching, etc.
+- Allows us to build complex full-stack web-apps and sites.
+- Allows us to use cutting-edge React features that need to be integrated into a framework: Suspense, Server Components, Server Actions, steaming, etc.
+
+The Next.js key ingredients:
+
+- SSR (dynamic and static)
+  - Dynamic or static can be selected for each route
+- File-based routing conventions
+  - Folders as routes
+  - Special files for pages, layouts, loaders, etc.
+- Data fetching and mutation on the server
+  - Fetching data directly in Server Components
+  - Mutations in Server Actions
+- Optimizations
+  - Images
+  - Fonts
+  - SEO
+  - Preloading
+
+Two flavours of Next.js: "App" and "Pages" router.
+**App router:**
+
+- Introduced in Next.js 13.4 (2023)
+- Recommended for new projects
+- Implements React's full-stack architecture: Server Components, Server Actions, Streaming, etc.
+
+Pros:
+
+- Easy fetching with fetch() right in components
+- Extremely easy to create layouts, loaders, etc.
+- More advanced routing (parallel routing, etc.)
+- Better DX (Developer Experience) and UX
+
+Cons:
+
+- Caching is very aggressive and confusing
+- Steep learning curve (but it's React)
+
+**Pages router:**
+
+- The first Next.js router since v1 (2016)
+- Still supported and updated in the future
+
+Pros:
+
+- Overall more simple and easy to learn
+
+Cons:
+
+- Simple things like layouts are confusing to implement
+- Data fetching using Next.js-specific APIs such as getStaticProps and getServerSideProps
+
+### 008 Setting Up a Next.js Project
+
+To create a new Next.js prject, we need to run `npx create-next-app@latest project-name` (yes for everything except src/ directory)
+
+Next.js implements a server with node.js.
