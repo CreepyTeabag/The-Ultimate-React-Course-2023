@@ -2367,3 +2367,132 @@ Cons:
 To create a new Next.js prject, we need to run `npx create-next-app@latest project-name` (yes for everything except src/ directory)
 
 Next.js implements a server with node.js.
+
+### 010 Defining Routes and Pages
+
+To create aa route in Next.js, we need to crete a folder with route name and in there add a page.js, which will be the page displayed at that route.
+The component in page.js can have any name, but usually everyone calls it Page.
+To create a nested route like cabins/test, we need to create subfolder test in folder cabins.
+
+To work around the problem with multiple files having the same name. you can enable 'Custom labels' setting in VScode and create an item like this:
+
+item: **/app/**/page.js
+value: PAGE ${dirname}
+
+### 011 Navigating Between Pages
+
+Regular anchor links <a href=''></a> do work in Next.js, but they cause a full page reload.
+
+Next.js applies a few optimization techniques:
+
+- it will prefetch all the routes that are linked on a certain page (in production only)
+- each page is downloaded separately as a separate chunk
+- each visited page is cached in the browser
+
+### 012 Creating a Layout
+
+All Next.js apps need to have one global layout that is called the root layout. This root layout wraps all the pages in the application and it needs to have <html> and <body> tags.
+RootLayout always accepts a `children` prop, which is the currently open page. We can render that page (or even some other inner layout) inside of root layout.
+In RootLayout we can also set metadata (page title, for example), declaring it outside of the component:
+
+```
+export const metadata = {
+  title: "The Wild Oasis",
+};
+```
+
+RootLayout is a server component.
+
+### 013 What are React Server Components (RSC – Part 1)
+
+**100% Client-side app:**
+We can imagine the UI as being a function of state changing over time.
+`UI = f(state)`
+As we keep updating the state, the app simply keeps rerendering and showing different parts of the UI and layout.
+
+Pros:
+
+- interactive
+- components
+
+Cons:
+
+- requires lots of JS
+- client-server data waterfalls
+
+**100% server-side app:**
+`UI = f(data)`
+Cons:
+
+- NO components
+
+Pros:
+
+- Easy and fast to fetch all data
+- Close to the data source
+- Needs to ship 0 kb of JS
+
+To take the best from both worlds, React Server Components (RSC) are created.
+UI = f(data, state)
+
+**React Server Components (RSC)**
+
+- A new full-stack architecture for React apps
+- Introduces the server as an integral part of React component trees: server components
+- We write frontend code next to backend code in a natural way that "feels" like regular React
+- RSC is NOT active by default in new React apps (e.g. Vite apps): it needs to be implemented by a framework like Next.js ("app router")
+- whenever possible, data should be fetched right on the server
+
+!! Important distinction: !!
+**RSC** is the name of the new paradigm.
+**Server component** is the name of the components file.
+
+Server components:
+
+- are only rendered on the server, never on the client.
+- UI = f(data)
+- have no interactivity, no state => they don't make it into the bundle
+- we can build backend with React
+- default in apps that use the RSC architecture (like Next.js)
+- cannot be stateful or use any hooks
+- can use props, but they must be serializable when passed to **client** components. No functions or classes.
+- data fetching is preferred. Use async / await in component
+- can import both client and server components
+- rerender on URL change (navigation)
+
+Client components:
+
+- "regular" components with interactivity
+- created with "use client" directive at the top of the module
+- tend to appear at the end of component tree, so as the last children.
+- child components of client components don't need specifying the "use client". They're client components by default, because they're inside the so-called Server-client boundary (split-point between server and client side).
+- can lift state up
+- can use props
+- data fetching is possible, but preferably with library
+- can only import client components (can't go back in the client-server boundary)
+- can render client components and server components passed as props
+- rerender on state change
+
+A graph displaying the new mental model of how RSC works is at 013, 25:20
+
+**RSC architecture: pros and cons**
+Pros:
+
+- We can compose entire full-stack apps with React components alone (+ server actions)
+- One single codebase for front and back-end
+- Server components have more direct and secure access to the data source (no API, no exposing API keys, etc.)
+- Eliminate client-server waterfalls by fetching all the data needed for a page at once before sending it to the client (not each component)
+- "Disappearing code": server components ship no JS, so they can import huge libraries "for free"
+
+Cons:
+
+- Makes React more complex
+- More things to learn and understand
+- Things like Context API don't work in server components
+- More decisions to make: "Should this be a client or a server component?", "Should I fetch this data on the server or the client?", etc.
+- Sometimes you still need to build an API (for example if you also have a mobile app)
+- Can only be used within a framework
+
+### 014 Fetching Data in a Page
+
+We can fetch data directly in server component by making this component an async function. Interestingly, the logs to the console will appear in the vscode console instead of browser console, because these logs happen on the server.
