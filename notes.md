@@ -2496,3 +2496,50 @@ Cons:
 ### 014 Fetching Data in a Page
 
 We can fetch data directly in server component by making this component an async function. Interestingly, the logs to the console will appear in the vscode console instead of browser console, because these logs happen on the server.
+
+### 015 Adding Interactivity With Client Components
+
+On the initial render ALL of the components are rendered on the server and then sent as HTML to the client.
+
+### 016 Displaying a Loading Indicator
+
+We can create a loading indicator for all of the pages in our app (even deeply nested ones, like cabins/test/23). For that we just need to create a file `loading.js` in the `app` folder. This Loading component will be shown instead of the pages that are loading, while the outer layout components that do not load data will be shown instantly.
+However, if the page has multiple components inside of it and only one of them is loading data - none of them will be shown, because the whole page is replaced with a loader. To tweak this and only replace certain elements we'll need Suspense.
+All of this is done with something called streaming
+
+### 017 How RSC Works Behind the Scenes (RSC – Part 2)
+
+**Traditional React:**
+Components -> Tree of component instances (Component tree) -> Render React element tree ("Virtual DOM") -> Commit to DOM DOM Elements (HTML)
+
+**RSC:**
+Component tree -> (render SCs) ->
+Server Components are rendered into React elements containing info about how the DOM will look like. All the other code from SC disappears. It happens because data needs to be serializable so that it can be sent to the client later.
+Meanwhile in this components tree something like placeholder for client components is created. Like a hole, where each client component will eventually be rendered. Each of these "placeholders" contains serialized props passed from SC to CC and a URL to the script with component code. All of this is quite complex, so it is powered by the framework's bundler.
+This mix of executed and unexecuted component instances is called **RSC payload**. It's basically a virtual DOM of all rendered SC + subtrees of unrendered CC. -> send to client & render CCs ->
+Complete Virtual DOM
+
+Why RSC Payload? Why not render SCs as HTML?
+
+- React describes the Ul as data, not as finished HTML
+- When a SC is re-rendered: React is able to merge ("reconcile") the current tree on the client with a new tree coming from the server
+- As a result, Ul state can be preserved when a SC re-renders, instead of completely re-generating the page as HTML
+
+### 018 RSC vs. SSR How are They Related (RSC – Part 3)
+
+SSR: "Just take this component tree, render it as HTML, and send that HTML to the browser. Also send the React code to make HTML interactive"
+
+RSC vs SSR:
+
+- RSC is NOT the same as SSR: they are separate technologies
+- RSC does NOT replace SSR
+- They usually work together: frameworks can combine them
+- Both client and server components are initially rendered on the server when SSR is used
+- In the RSC model, "server" just means "the developer's computer"
+- Result: RSC does NOT require a running web server! Components could run only once at built time (static site generation)
+
+The big confusion is to think that server in RSC and server in SSR is the same thing. They can be the same, but they don't have to be.
+In RSC, React server and React client are simply two different environments, two different parts of the RSC protocol.
+The React server doesn't even need to be an actual web server. It can just be any other computer.
+And React client doesn't have to be a browser - it can be something that consumes the rendered React app as HTML.
+SSR happens only on initial render. On re-renders, client components only render on the actual client.
