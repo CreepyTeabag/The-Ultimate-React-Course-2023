@@ -2543,3 +2543,15 @@ In RSC, React server and React client are simply two different environments, two
 The React server doesn't even need to be an actual web server. It can just be any other computer.
 And React client doesn't have to be a browser - it can be something that consumes the rendered React app as HTML.
 SSR happens only on initial render. On re-renders, client components only render on the actual client.
+
+## 33 - Starting to Build the Wild Oasis Website
+
+### 003 Project Organization
+
+If we want to create a folder, but avoid creating a route, we can add underscore `_` before the folder name. I.e. `_components`
+
+Next.js automatically supports import aliases, so we can specify paths like `@/app/_components/smth`
+
+### 004 Styling With Tailwind CSS
+
+TailwindCSS and CSS modules are automatically supported in Next.js, so they can be used easily.
