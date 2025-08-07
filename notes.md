@@ -2555,3 +2555,64 @@ Next.js automatically supports import aliases, so we can specify paths like `@/a
 ### 004 Styling With Tailwind CSS
 
 TailwindCSS and CSS modules are automatically supported in Next.js, so they can be used easily.
+
+### 005 Adding Page Metadata and Favicon
+
+We can export the main metadata from the root layout and then also export metadata from each page. The page metadata will override the main metadata.
+
+To create a changing title for all the pages, we can specify this in the layout:
+
+```
+title: {
+  template: "%s | The Wild Oasis",
+  default: "Welcome | The Wild Oasis",
+},
+```
+
+The title specified in a specific page will be inserted instead of `s%`. If title is not specified - the default will be used.
+
+To add metatags to the page, we can just write them in the metadata object:
+`description: 'info about the website'`.
+
+To add a favicon to the website, we can just add a file called `icon` to the `app` folder. It can have any file extension. Next.js will use it automatically.
+
+### 006 Loading and Optimizing Fonts
+
+Next.js downloades and stores other fonts on our server for better performance and optimization. To add a font, we need to do this:
+
+```
+import { Josefin_Sans } from "next/font/google";
+
+const josefin = Josefin_Sans({
+  subsets: ["latin"],
+  display: "swap", // will show text in default font initially, and then swap it with our font
+});
+...
+<body className={`${josefin.className}`}>
+```
+
+### 008 Optimizing Images With Next.js Image Component
+
+For image optimization, Next.js provides an Image component. It does three important things:
+
+1. Automatically serves correctly sized images in modern formats (like webp). And it will do it on demand.
+2. It prevents layout shifts beacuse it forces us to specify the exact width and height
+3. Automatically lazy loads images only when they actually enter the viewport
+
+Serving the correctly sized image works if we specify the source like this:
+`<Image src="/logo.png" height="60" width="60" alt="" />`
+
+But we can also import the image beforehand and omit the width ang height. (It's called a statically imported image). But then the resizing won't happen:
+
+```
+import logo from "@/public/logo.png";
+<Image src={logo}/>
+```
+
+Statically imported images allow Next.js to analyze the image beforehand. They accept other properties, like `quality={10}`. That'll change the image quality, making its size smaller.
+
+### 009 Building the Home Page
+
+If we need a responsive image and don't want to specify the exact size, we use a statically imported image and add a `fill` attribute to it. That'll set width and height to 100% and position: absolute, so if need to change that - wa can use CSS (i.e set `object-fit: cover`).
+We can also add `placeholder="blur"` and while the image is loading - we will see a blurred version of it.
+If Image uses `fill` one of its parent elements needs to have a `position: relative`.
