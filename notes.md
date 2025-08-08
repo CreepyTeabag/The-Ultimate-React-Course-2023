@@ -2616,3 +2616,17 @@ Statically imported images allow Next.js to analyze the image beforehand. They a
 If we need a responsive image and don't want to specify the exact size, we use a statically imported image and add a `fill` attribute to it. That'll set width and height to 100% and position: absolute, so if need to change that - wa can use CSS (i.e set `object-fit: cover`).
 We can also add `placeholder="blur"` and while the image is loading - we will see a blurred version of it.
 If Image uses `fill` one of its parent elements needs to have a `position: relative`.
+
+### 012 Adding a Nested Layout
+
+To add a layout that applies to a route and its subroutes, we need to create a layout.js. The route page and its subroute pages will be placed inside of this layout.
+
+## 34 - Data Fetching, Caching, and Rendering
+
+### 002 Setting Up Supabase
+
+Next.js has a built-in support for environment variables. To use them, we need to create .env.local at the root, set up our variables `SOMETHING='smth'` and then use them like this: `process.env.SOMETHING`. By default, these variables do not leak to the browser. If we need to make them public - we need to name these variables starting with `NEXT_PUBLIC_SOMETHING`
+
+### 003 Fetching and Displaying Cabin List
+
+If url to the image source is not on our server- we'll get an error. We need to add the url of that server to next.config.mjs [see documentation](https://nextjs.org/docs/messages/next-image-unconfigured-host)
