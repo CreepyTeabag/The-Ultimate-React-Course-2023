@@ -2665,3 +2665,35 @@ Behind the scenes a component marks itself as suspending simply by throwing a Pr
 
 In Next.js we should get used to always have the data fetching as close as possible to the place that actually needs that data, because by doing so, we can then implement a more granular data fetching strategy.
 To use Suspense, we just need to move the data fetching logic and the markup that we want to replace with fallback into a separate component, wrap that component into Suspense, and pass the fallback jsx as a prop: `<Suspense fallback={<Spinner />}></Suspense>`
+
+### 007 Dynamic Route Segments Building the Cabin Page
+
+To create a dynamic route segment (i.e. cabins/91, cabins/92, cabins/:cabinId), we just need to create a subfolder in cabins/ with a name in square brackets: `[cabinId]`
+To get access to this cabinId, in [cabinId]/page.js we need to get params from props. These props will contain the data from the URL: `{ cabinId: '91' }`
+
+### 008 Generating Dynamic Metadata
+
+We can also generate metadata dynamically based on params and even fetch the data asynchronously. For example:
+
+```
+export async function generateMetadata({ params }) {
+  const { name } = await getCabin(params.cabinId);
+
+  return {
+    title: `Cabin ${name}`,
+  };
+}
+```
+
+Using `generateMetadata()` function is a convention, so it really need to be called that. And it must return the object with the shape of metadata.
+
+### 009 Error Handling Setting Up Error Boundaries
+
+To handle any errors that might occur in our app, we can use another convention. In app/error.js we can define a component that'll be shown to the user instead of a broken page. Important:
+
+1. The error.js component needs to be a client component ("use client")
+2. In the props, it gets error and reset. error.message contains info about what happened. reset sort of reloads the component.
+
+Also, just like with layout and loading components, we can have multiple error components nested inside different routes.
+
+The error boundary can only catch rendering errors, so it won't catch errors that might happen in callback functions. It also can't catch errors that might happen in the root layout. To catch those, we would need to create a global-error (see documentation for more info).
