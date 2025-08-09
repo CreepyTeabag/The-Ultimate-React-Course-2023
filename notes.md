@@ -2630,3 +2630,38 @@ Next.js has a built-in support for environment variables. To use them, we need t
 ### 003 Fetching and Displaying Cabin List
 
 If url to the image source is not on our server- we'll get an error. We need to add the url of that server to next.config.mjs [see documentation](https://nextjs.org/docs/messages/next-image-unconfigured-host)
+
+### 004 Streaming Route Segments With loading.js File
+
+To create a global loader, we add it to app/
+If we need a spinner for a specific route - wa add loading.js to the folder with that route.
+Adding loading.js activates streaming, so the page won't work if user disables javascript in the browser.
+
+### 005 What is React Suspense
+
+Suspense:
+
+- Built-in React component that we can use to catch/isolate components (or entire subtrees) that are not ready to be rendered ("suspending")
+- We can think of it like a catch block in a try / catch statement. It catches the element that are suspending
+- What causes a component to be suspending?
+  1. Fetching data (with a supported library)
+  2. Loading code (with React's lazy loading)
+- Native way to support asynchronous operations in a declarative way (no more isLoading states and render logic)
+
+During render process, whenever React finds a component or a sub-tree that is currently suspending, it will:
+
+- move back up to the closest Suspense parent ('boundary')
+- discard already rendered children
+- display fallback component / JSX
+
+After the async work is done (the suspended component is ready) it renders subtree under Suspense boundary.
+
+Components do NOT automatically suspend just because an async operation is happening inside them. Integrating async operations with Suspense is hard, so we use libraries (React Query, Next.js, etc.)
+Behind the scenes, in the fiber tree, Suspense component wraps the suspended component into an Activity component. The Activity component either shows the suspended component, or a fallback. So it doesn't really destroy the suspended element - it just hides it. So its state is preserved during the suspending and unsuspending phases.
+Usually if the suspended component suspends again - the fallback will be shown again. But it will NOT be shown again if the Suspense trigger is wrapped in a transition (startTransition). In Next.js, that's the case with page navigations. We can reset the Suspense boundary with a unique key prop.
+Behind the scenes a component marks itself as suspending simply by throwing a Promise and thereby notifying the closest Suspense boundary.
+
+### 006 Streaming UI With Suspense Cabin List
+
+In Next.js we should get used to always have the data fetching as close as possible to the place that actually needs that data, because by doing so, we can then implement a more granular data fetching strategy.
+To use Suspense, we just need to move the data fetching logic and the markup that we want to replace with fallback into a separate component, wrap that component into Suspense, and pass the fallback jsx as a prop: `<Suspense fallback={<Spinner />}></Suspense>`
