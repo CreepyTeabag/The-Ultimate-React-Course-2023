@@ -2759,3 +2759,45 @@ Some important terminology:
 ### 012 Analyzing Rendering in Our App
 
 If we run `npm run build`, Next.js will print in the console which routes will be static and which ones will be dynamic.
+
+### 013 Making Dynamic Pages Static With generateStaticParams
+
+If in our app we have dynamic routes, but there's a finite number of them, we can make Next.js render them statically. For that, we need to let it know about all of the possible routes. For example:
+
+```
+export async function generateStaticParams() {
+  const cabins = await getCabins();
+
+  const ids = cabins.map((cabin) => ({ cabinId: String(cabin.id) }));
+
+  return ids;
+}
+```
+
+This'll create an array that looks like this:
+
+```
+[
+  { cabinId: '91' },
+  { cabinId: '92' },
+  { cabinId: '93' },
+  { cabinId: '94' },
+]
+```
+
+So it needs to have a shape of an array og objects with key-value pairs like `[routeName]: value`. From this Next.js will know about all the possible pages and will be able to statically generate them.
+
+### 014 Static Site Generation (SSG)
+
+If all our site is static, we can deploy it as SSG. For that:
+
+- add `output: "export"` to next.config.mjs
+- run `npm run build`
+- Next.js will create a folder called `out` with our site
+
+If some of the routes are not static, Next.js will throw an error.
+
+This `out` folder can then be deployed on any server (or run by Live server). However, if we run Live server, we can see that optimized images aren't there. That's because to optimize images, Next.js uses Vercel API dynamically on the server. Which we now no longer have, so we cannot use this service. To fix that, we can:
+
+1. Not optimize images at all
+2. Create our own custom loader that will then use a different service (like `Cloudinary`) and it'll make out website work again.
