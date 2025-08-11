@@ -2697,3 +2697,65 @@ To handle any errors that might occur in our app, we can use another convention.
 Also, just like with layout and loading components, we can have multiple error components nested inside different routes.
 
 The error boundary can only catch rendering errors, so it won't catch errors that might happen in callback functions. It also can't catch errors that might happen in the root layout. To catch those, we would need to create a global-error (see documentation for more info).
+
+### 010 Error Handling Not Found Errors
+
+If a page is not found (the URL doesn't exist), Next.js will automatically show 404 error. We can replace it with our custom error component by creating not-found.js in the route folder that we want.
+If we want to trigger this 404 error manually to show our error component, we can do this:
+
+```
+import { notFound } from "next/navigation";
+notFound(); // trigger this if we want to show the error component
+```
+
+### 011 Different Types of SSR Static vs. Dynamic Rendering
+
+- Next.js is a React framework, so rendering is done by React, following the rules we learned earlier
+- Remember: Both Server and Client components are rendered on the server on the initial render
+- In Next.js, the server-side rendering work is split by routes (Next.js splits the rendering work by route)
+- Each route can be either static (also called pre-rendered) or dynamic
+- There is also Partial Pre-Rendering (PPR) which mixes dynamic and static rendering in the same route
+
+**Static vs Dynamic rendering**
+Static rendering:
+
+- HTML is generated at build time (whenever we run the build command), or periodically in the background by re-fetching data (ISR). So it's the developer who triggers the rendering
+- One sort of static rendering is ISR (incremental static regeneration) which simply means that a route can be re-rendered periodically in the background
+- Static rendering is useful when data doesn't change often and is not personalized to user
+- Default rendering strategy in Next.js (even when a page or component fetches data)
+- When deployed to Vercel, each static route is automatically hosted on a CDN (content delivery network)
+- If all routes of an app are static, the entire app can be exported as a static website (SSG - static site generation)
+
+Dynamic rendering:
+
+- HTML is generated at request time (for each new request reaches the server), so it's the user who triggers the rendering
+- Makes sense if:
+  1. The data changes frequently and is personalized to the user (e.g. cart)
+  2. Rendering a route requires information that depends on request (e.g. search params)
+- A route automatically switches to dynamic rendering in certain conditions
+- When deployed to Vercel, each dynamic route becomes a serverless function
+
+**When Next.js switches to dynamic rendering**
+
+- Usually, developers don't directly choose whether a route should be static or dynamic. Next.js will automatically switch to dynamic rendering in the following scenarios:
+  1. The route has a dynamic segment (page uses params)
+  2. searchParams are used in the page component (/product?quantity=23)
+  3. headers() or cookies () are used in any of the route's server components
+  4. An uncached data request is made in any of the route's server components
+- This is necessary because any of these values can not be known by Next.js at built time
+- We can also force Next.js to render a route dynamically by influencing caching:
+  - `export const dynamic = 'force-dynamic' ;` from page.js
+  - `export const revalidate = 0;` from page.js
+  - `{ cache: 'no-store' }` added to a `fetch` request in any of the route's server components
+  - `noStore()` in any of the route's server components
+
+Some important terminology:
+
+- Content Delivery Network (CDN): A network of servers located around the globe that cache and deliver a website's static content (HTML, CSS, JS, images) from as close as possible to each user.
+- Serverless computing: With the serverless computing model, we can run application code, usually back-end code, without managing the server ourselves. Instead, we can just run single functions on a cloud provider: serverless functions. The server is initialized and active only for the duration the serverless function is running, unlike a traditional Node.js app where the server is constantly running. Remember: each dynamic route becomes a serverless function.
+- The "edge": "As close as possible to the user". A CDN is part of an "edge" network, but there is also serverless "edge" computing. This is serverless computing that does not happen on a central server, but on a network that's distributed around the globe, as close as possible to the user (like a CDN but for running code). Important: we can select certain routes to run on the edge when deployed to Vercel.
+- Incremental Static Regeneration (ISR): A Next.js feature that allows developers to update the content of a static page, in the background, even after the website has already been built and deployed. This happens by re-fetching the data of a component or entire route after a certain interval
+
+### 012 Analyzing Rendering in Our App
+
+If we run `npm run build`, Next.js will print in the console which routes will be static and which ones will be dynamic.
