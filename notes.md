@@ -2861,7 +2861,7 @@ DATA CACHE
 - Entire page: `export const revalidate = 0;` (page.js)
 - Entire page: `export const dynamic = "force-dynamic";` (page.js)
 - Individual request: `fetch('...', {cache: "no-store"})`
-- Individual server component: `noStore()`
+- Individual server component: `noStore()` (`connection` in Next.js 15)
 
 FULL ROUTE CACHE
 **Where?** Server
@@ -2880,6 +2880,21 @@ ROUTER CACHE
 
 - By revalidating the data cache with `revalidatePath` or `revalidateTag` in server action
 - Forcing a reload with `router.refresh`
-- Setting or deleting a cookie in a server action `cookies.set` / `cookies,delete` in SA
+- Setting or deleting a cookie in a server action `cookies.set` / `cookies.delete` in SA
 
 **How to opt out?** Not possible (Can be very problematic)
+
+### 017 Experimenting With Caching and ISR
+
+To simulate production environment, we can run `npm run build && npm run start` or create our own commend in package.json `"prod": "next build && next start",`
+
+By default, if we have a statically generated page, the data that was fetched at the point of building, will be set in stone (cached in Data cache and full route cache). Even if the data on the server changes, we don't see it no matter how many times we reload the page. It will stay the same for all the users until we revalidate the data.
+
+To make a page dynamic, we set `export const revalidate = 0;` The value that we assign to `revalidate` must be a value, it can't be computed! The value always needs to be in seconds.
+With `export const revalidate = 0;` the page will be regenerated for each request (on each page reload)
+
+Incremental static regeneration (ISR) will regenerate a static page and fetch fresh data for it from time to time. It's kind of middle ground between fully static and dynamic.
+
+The first user who comes to the page after the time has passed is the one who will regenerate it for the next one. So it's only the subsequent user will get that new result.
+
+To opt out of caching for a particular component, we need to use `noStore()` function (`connection` in Next.js 15). But in practice that'll opt out the entire route from caching. So right now there's no difference between this option and `export const revalidate = 0;`. But in the future, when the PPR starts working, it'll work great with all of the components wrapped in <Suspense>.
