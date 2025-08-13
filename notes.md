@@ -2801,3 +2801,85 @@ This `out` folder can then be deployed on any server (or run by Live server). Ho
 
 1. Not optimize images at all
 2. Create our own custom loader that will then use a different service (like `Cloudinary`) and it'll make out website work again.
+
+### 015 Partial Pre-Rendering
+
+- Idea/problem: Most pages don't need to be 100% static or 100% dynamic
+- Solution: Partial Pre-Rendering: a new rendering strategy that combines static
+  and dynamic rendering in the same route
+  1. A static (pre-rendered) shell is served immediately from a CDN, leaving holes for dynamic content
+  2. The slower dynamic content is streamed in as it's rendered on the server
+- Result: We get even faster pages that can mostly be delivered from the edge (CDN) even when there are small dynamic parts.
+
+As of Next.js 14 and 15, PPR is highly experimental and should not be used in production!
+
+- PPR needs to be turned on in config file
+- By default, as much as possible of any route will be statically rendered, creating a static shell
+- Dynamic parts (components) should be placed inside Suspense boundaries
+- There are no new APIs to learn
+- These boundaries tell Next.js that anything within the boundary is dynamic
+- The boundary prevents the dynamic part (e.g. reading a header or making a non-cached fetch request) from spreading onto the entire route.
+- We provide a static fallback to be shown while the dynamic part is rendering
+- Dynamic components or sub-trees are inserted into the static shell as they become available
+
+### 016 How Next.js Caches Data
+
+- Caching: Storing fetched or computed data in a temporary location for future access, instead of having to re-fetch or re-compute the data every time it's needed
+- Next.js caches very aggressively: everything that is possible to cache, is cached
+- Next.js provides APIs for cache revalidation: removing data from the cache and updating it with fresh data (re-fetched or re-computed)
+- Makes Next.js apps more performant and saves costs (computing and data access)
+- Caching always ON by default: strange and unexpected behavior in some situations (stale data, for example). Some caches can't be turned off
+- Very confusing: Many different Next.js APIs affect and control caching
+
+The caching mechanisms:
+(All of this is the behavior in production mode. Caching doesn't work in development)
+
+REQUEST MEMOIZATION
+**Where?** Server
+**What data?** Data fetched with similar GET requests (same url and options in fetch function)
+**How long?** One page request (one render, one user)
+**Enables:** No need to fetch at the top of tree: the same fetch in multiple components only makes one request (Only in components (not route handlers or server actions))
+**How to revalidate?** N.A.
+**How to opt out?** AbortController
+
+DATA CACHE
+**Where?** Server
+**What data?** Data fetched in a route or a single fetch request
+**How long?** Indefinitely, even across de-deploys (can revalidate or opt out)
+**Enables:** Data for static pages + ISR when revalidated
+**How to revalidate?**
+
+(Any of these force page to become dynamic, which also opts out of the Full Route cache)
+
+- Time-based (automatic) for all data on page: `export const revalidate = <time>;` (page.js)
+- Time-based (automatic) for one data request: `fetch('...', {next: {revalidate: <time>}})`
+- On-demand (manual): `revalidatePath` or `revalidateTag`
+- Will automatically revalidate full route cache
+
+**How to opt out?**
+
+- Entire page: `export const revalidate = 0;` (page.js)
+- Entire page: `export const dynamic = "force-dynamic";` (page.js)
+- Individual request: `fetch('...', {cache: "no-store"})`
+- Individual server component: `noStore()`
+
+FULL ROUTE CACHE
+**Where?** Server
+**What data?** Entire static pages (HTML and RSC payload)
+**How long?** Until the "Data cache" is invalidated (or app is re-deployed)
+**Enables:** Static pages
+**How to revalidate?** Will revalidate automatically when data cache is revalidated.
+**How to opt out?** See data cache.
+
+ROUTER CACHE
+**Where?** Client
+**What data?** Pre-fetched and visited pages: static and dynamic
+**How long?** 30 sec dynamic / 5 min static (throughout one user session)
+**Enables:** SPA-like navigation (instant navigation and no full reloads)
+**How to revalidate?**
+
+- By revalidating the data cache with `revalidatePath` or `revalidateTag` in server action
+- Forcing a reload with `router.refresh`
+- Setting or deleting a cookie in a server action `cookies.set` / `cookies,delete` in SA
+
+**How to opt out?** Not possible (Can be very problematic)
