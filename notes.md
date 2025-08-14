@@ -2898,3 +2898,75 @@ Incremental static regeneration (ISR) will regenerate a static page and fetch fr
 The first user who comes to the page after the time has passed is the one who will regenerate it for the next one. So it's only the subsequent user will get that new result.
 
 To opt out of caching for a particular component, we need to use `noStore()` function (`connection` in Next.js 15). But in practice that'll opt out the entire route from caching. So right now there's no difference between this option and `export const revalidate = 0;`. But in the future, when the PPR starts working, it'll work great with all of the components wrapped in <Suspense>.
+
+## 35 - Client and Server Interactions
+
+### 002 Blurring the Boundary Between Server and Client (RSC – Part 4)
+
+Traditional server-client communication:
+
+- Very clear server-client boundary
+- Communication happens via an API
+- Once JSON arrives from the back-end,the front-end takes over
+
+Next.js with RSC + server actions:
+
+- No clear separation between front-end and back-end anymore
+- "Knitting": pieces of server and client code interweave (composability)
+- Allow us to build true full-stack applications in just one codebase
+- No need for an intermediary API in many times
+
+Client-server boundaries are NOT established in the component tree, but in dependency tree. So it relies on where the components are imported.
+So Client components cannot import server components. Only other client components (can't go back in client-server boundary).
+But client components can render server component passed as props.
+
+Server components, on the other hand, can import and render both client and server components.
+
+A component can be both server and client instance. So if it's used by server component and doesn't have "use client" directive, it's a server component instance. If it does have "use client" directive or is imported by such a component - it'll be a client component instance. = A component inside the client-server boundary creates a client component instance.
+
+### 004 Highlighting Current Side Navigation Link
+
+We can play around with Suspense boundary in React DevTools (setting it to Suspended: true, for example).
+
+To work with the url, we can use Next.js's custom hook.
+
+```
+import { usePathname } from "next/navigation";
+...
+const pathname = usePathname();
+```
+
+The component we use it in must be a client component.
+
+### 005 Sharing State Between Client and Server The URL
+
+A great way to share data between the client and the server is to add to the url. If we have search params in the url (`?capacity=small`) - we can read it in the server component of the page. Page.js gets access to it via prop `searchParams`. Other server components don't have access to it.
+If the page uses `searchParams` - it can no longer be statically rendered and becomes dynamic.
+
+To change the search params in the URL, we need to do this:
+
+```
+import { usePathname, useRouter, useSearchParams } from "next/navigation"; // everything needs to come from next/navigation!!
+
+...
+
+const searchParams = useSearchParams();
+const router = useRouter();
+const pathname = usePathname();
+
+function handleFilter(filter) {
+  const params = new URLSearchParams(searchParams);  // get access to the URL params
+  params.set("capacity", filter); // change URL params
+  router.replace(`${pathname}?${params.toString()}`, { scroll: false }); // navigate to the new URL & scroll to the top or not
+}
+```
+
+Navigation in Next.js is always wrapped in a React transition. And in a transition, the suspense will not hide the content that has already been rendered earlier.
+So when we use Next.js navigation, our components might seem stuck until the new data arrives. Next.js won't hide the previously rendered content and we won't see a spinner fallback.
+To actually show the fallback, be just need to pass a new, unique key to the Suspense that wraps our loading content.
+
+If `searchParams` change - then the page component will rerender.
+
+### 006 Advanced Server Components in Client Components
+
+We can render server components inside client components if we pass them in as props. That way, the server can build the component and pass the full version of it into the client component.
