@@ -2970,3 +2970,13 @@ If `searchParams` change - then the page component will rerender.
 ### 006 Advanced Server Components in Client Components
 
 We can render server components inside client components if we pass them in as props. That way, the server can build the component and pass the full version of it into the client component.
+
+### 008 Using the Context API for State Management
+
+If want to use Context API in out app, we need to create a context provider component and pass other components (including server ones) as children.
+
+### 009 Creating an API Endpoint With Route Handlers
+
+To create an API endpoint, we need to create a folder and put a `route.js` file into it. This folder cannot contain `page.js`!
+In `route.js` we can create functions with "HTTP verbs" names like GET, POST, etc. These functions can return JSON that will be returned when we try to access the folder that contains this `route.js`.
+In GET function we get access to `request` and `params` in the arguments and we can do what we need with them. For example, if are at a dynamic route, we can use the route id by getting it from `params`
