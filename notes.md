@@ -2980,3 +2980,18 @@ If want to use Context API in out app, we need to create a context provider comp
 To create an API endpoint, we need to create a folder and put a `route.js` file into it. This folder cannot contain `page.js`!
 In `route.js` we can create functions with "HTTP verbs" names like GET, POST, etc. These functions can return JSON that will be returned when we try to access the folder that contains this `route.js`.
 In GET function we get access to `request` and `params` in the arguments and we can do what we need with them. For example, if are at a dynamic route, we can use the route id by getting it from `params`
+
+## 36 - Authentication With NextAuth (Auth.js)
+
+### 002 Setting Up NextAuth
+
+To add authentication to a Next.js app, we can use NextAuth (= Auth.js) library. It helps to easily set up everything, if we have some external auth service (like Google or VK)
+
+When creating routes, we can create a "catch all segment", which is a folder called `[...<whatever>]`. I.e. if we have `api/auth/[...<whatever>]/route.js` - all of the routes `api/auth/<anything here>` will lead to `route.js`
+
+### 003 Getting the User Session
+
+If we use `auth` from `NextAuth`, the entire route will become dynamic, because `auth` uses headers and cookies. So if use it in the layout - then the entire site will become dynamic.
+
+**Authentication**: getting the right information about the current user and making sure that the user is who they claim to be.
+**Authorization**: only allowing access to certain area of our website or app to users that are logged in and have the privilege to visit that part.
