@@ -2995,3 +2995,168 @@ If we use `auth` from `NextAuth`, the entire route will become dynamic, because 
 
 **Authentication**: getting the right information about the current user and making sure that the user is who they claim to be.
 **Authorization**: only allowing access to certain area of our website or app to users that are logged in and have the privilege to visit that part.
+
+### 004 What is Middleware in Next.js
+
+Middleware is a program that sits between two things. In Next.js middleware is a function that sits between the incoming request and the response. So it allows us to run some code based on the incoming request but before the response is completed.
+Middleware details:
+
+- By default, middleware runs before every route in a project, but we can specify whish paths using a matcher (so it runs after the request, but before the route the user is visiting is rendered and sent back)
+- Analogy: chunk of code that's in every page.js component
+- Only one middleware function: needs to be exported from middleware.js (or .ts) in the project root folder.
+- Middleware needs to produce a response: 1 or 2
+  1. It redirects or rewrites to a route (= runs before the routes are rendered)
+  2. It sends response directly (usually JSON)
+
+Use cases:
+
+- Read and set cookies and headers
+- Authentication and authorization
+- Server-side analytics
+- Redirect based on geolocation
+- A/B testing
+
+### 005 Protecting Routes With NextAuth Middleware
+
+To create middleware, we need to create a file `middleware.js` in the root folder (not in the `app` folder). From there, we need to export a function called `middleware`.
+
+To redirect from middleware, we do this: `return NextResponse.redirect(new URL("/new", request.url));`
+To redirect only from specific routes, we do this:
+
+```
+export const config = {
+  matcher: ["/exception1", "/exception2"],
+};
+```
+
+If we want to run middleware based on authorization, we need to set `middleware = auth` and in `authConfig` add this:
+
+```
+callbacks: {
+  authorized({ auth, request }) {
+    return !!auth?.user;
+  },
+},
+```
+
+Then it'll automatically redirect us to the signin page.
+
+### 006 Building a Custom Sign In Page
+
+If we want to do something interactive on the server, we need to use server actions. This is done by submitting a form.
+
+## 37 - Mutations With Server Actions + Modern React Hooks
+
+### 002 What are Server Actions
+
+We use Next.js to create interactive full-stack applications based on RSC architecture. I consists of two parts:
+
+1. Data fetching (Server components)
+2. Mutations (Server actions)
+
+Server actions:
+
+- The missing piece in the RSC architecture that enables interactive full-stack applications
+- Async functions that run exclusively on the server, allowing us to perform data mutations
+- Created with the "use server" directive at the top of the function or an entire module
+- Behind the scenes: Next.js creates API endpoint (with URL) for each server action. Whenever a server action is called, a POST request is made to its URL (the function itself never reaches client) => We don't have to manually create APIs ro route handlers to mutate data.
+- Unlike server components, Server actions need a running web server because they do not run on build time!
+
+Server actions can be defined at the top of:
+
+1. An async function in a server component. Can be used in component or passed to a client component (unlike functions)
+2. Standalone file: exported functions become server actions that can be imported into any component [recommended]
+
+"use server" directive is only for server actions, not for server components!
+
+Server actions can be called from:
+
+1. `action` attribute in a `<form>` element (in server and client components)
+2. Event handlers (only client components)
+3. `useEffect` (only client components)
+
+In server actions, we can:
+
+- Perform data mutations (create, update, delete)
+- Update the UI with new data: Revalidate cache with `revalidatePath` and `revalidateTag`
+- Work with cookies
+- Many more...
+
+### 003 Updating the Profile Using a Server Action
+
+Whenever we're working with server actions, we need to remember that we're doing backend development. So we always need to make sure of 2 things:
+
+1. The user who is invoking the server action actually has the authorization of doing the action that the server action is supposed to do.
+2. We always need to treat all the inputs as unsafe.
+
+Quite often in server actions we don't need to write out try/catch blocks. We just throw an error, and this error will be caught by the closest error boundary (`error.js`)
+
+### 004 Manual Cache Revalidation
+
+If we change the data with server actions, it is still cached. So if we submit the form, go to another route, and then come back - we might see stale data from before, if 30 seconds haven't passed yet or if we haven't hard-reloaded the page.
+To fix that, we manually revalidate path by calling `revalidatePath("/our/path");` inside our server action. That's something that we usually need to do whenever the that data that was updated should be visible on the screen.
+
+### 005 Displaying a Loading Indicator The useFormStatus Hook
+
+We cannot use `useFormStatus` hook directly in the component that returns the form.
+We need to use in a component that is inside that form:
+
+```
+function Submit() {
+  const status = useFormStatus();
+  return <button disabled={status.pending}>Submit</button>
+}
+
+export default function App() {
+  return (
+    <form action={action}>
+      <Submit />
+    </form>
+  );
+}
+```
+
+### 007 Deleting a Reservation
+
+If we want to call server action from a client component, we need to wrap it in a function that has `"use server"` inside of it.
+
+```
+function deleteReservation() {
+  "use server";
+  //code
+}
+```
+
+### 007 Deleting a Reservation
+
+We always need to remember that when we're working with server actions and want to see the result of our changes, we need to revalidate the cache.
+
+Also, when working with our database, we need to protect our requests, since their cURL can be just copied from devTools and used in a terminal. So we need to double-check that the user really has the right to do whatever they're doing.
+
+### 008 Another Loading Indicator The useTransition Hook
+
+The `useTransition` hook allows us to mark a state as a so-called transition. When a state is marked as a transition, that state update will happen without blocking the UI. This means that UI will stay responsive during the re-render + we'll get an indication that a state transition is happening.
+In Next.js we can use `useTransition` to mark a server action as a transition too, which will allow us to get that indication that something is happening in the background.
+It can be used like this:
+
+```
+function DeleteReservation({ bookingId }) {
+  const [isPending, startTransition] = useTransition();
+
+  function handleDelete() {
+    startTransition(() => deleteReservation(bookingId));
+  }
+
+  return (
+    <button onClick={handleDelete}>
+      {!isPending ? (
+        <span>Delete</span>
+      ) : (
+        <span>
+          <SpinnerMini />
+        </span>
+      )}
+    </button>
+  );
+}
+```
