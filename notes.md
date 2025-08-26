@@ -3160,3 +3160,39 @@ function DeleteReservation({ bookingId }) {
   );
 }
 ```
+
+### 010 Removing Reservations Immediately The useOptimistic Hook
+
+Optimistic UI is a trick and a technique that we can use in order to improve the perceived performance of a user interface. It's called optimistic because we assume that a certain asynchronous operation will be successful before it has even finished (while it's still working in the background). Basically we show the expected result of how UI will look like if everything goes well. If for some reason it doesn't - the UI is set back to what is was.
+
+```
+function ReservationList({ bookings }) {
+  const [optimisticBookings, optimisticDelete] = useOptimistic(
+    bookings, // current state which is rendered if no async operation is happening
+    (curBookings, bookingId) => { // argument: 1. current state, 2. new info necessary to compute the optimistic state (it's passed into optimisticDelete)
+      return curBookings.filter((booking) => booking.id !== bookingId);
+    } // state update function which determines the next optimistic state
+  );
+
+  async function handleDelete(bookingId) {
+    optimisticDelete(bookingId);
+    await deleteReservation(bookingId);
+  }
+
+  return (
+    <ul>
+      {optimisticBookings.map((booking) => ( // optimisticBookings are bookings from useOptimistic in the beginning. While there's an async function - they're changed by optimisticDelete
+        <ReservationCard
+          onDelete={handleDelete}
+          booking={booking}
+          key={booking.id}
+        />
+      ))}
+    </ul>
+  );
+}
+```
+
+optimisticDelete in this example is similar to dispatch function that triggers a reducer function, which takes the current state and computes the next state
+
+useOptimistic is a hook, so it can only be used in client components.
