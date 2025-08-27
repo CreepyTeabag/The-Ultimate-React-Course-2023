@@ -3196,3 +3196,7 @@ function ReservationList({ bookings }) {
 optimisticDelete in this example is similar to dispatch function that triggers a reducer function, which takes the current state and computes the next state
 
 useOptimistic is a hook, so it can only be used in client components.
+
+### 012 Creating a New Reservation
+
+When we call `revalidatePath` does not only clear the browser cache (=router cache), but also the data cache and full route cache in static sites / static pages.
